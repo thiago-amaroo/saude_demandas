@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+  <title> Saude | Demandas</title>
+</head>
+
+<body class="col-lg-6 my-3 mx-auto">
+  <header>
+    <table>
+      <tr>
+        <td width="20%">
+          <img src="/imgs/brasao.png" width="100px">
+        </td>
+        <td>
+          <h1 class="text-center display-2 mb-4">Saúde Demandas</h1>
+        </td>
+      </tr>
+    </table>
+</header>
+
+<nav class="navbar navbar-expand-lg " style="background-color: #427859; font-size:17px; border-radius: 8px; opacity: 0.95;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" style="color: #fff" > Menu </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/demandas/consultas"  style="color: #fff"> Demandas Consultas </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/demandas/exames"  style="color: #fff"> Demandas Exames </a>
+          </li>
+    
+            <!-- Se nao tiver variavel role ou usuario sendo passada, o typeof(role ou usuario) igual a undefined -->
+            <% if( typeof(role) != "undefined") { %>
+                <% if( role === "admin" ) { %>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/admin"  style="color: #fff"> Area Admin  </a>
+                    </li>
+                <% } %>
+            <% } %>
+    
+
+            <% if( typeof(usuario) != "undefined") { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"  style="color: #fff"> Logout </a>
+                </li>
+            <% } %>
+            </ul>
+
+            <% if( typeof(role) != "undefined") { %>
+                <span class="navbar-text" style="color: #fff">
+                Olá, <%= usuario %> <br>
+                </span>
+            <% } %>
+      </div>
+    </div>
+  </nav>
+

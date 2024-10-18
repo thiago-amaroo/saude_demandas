@@ -1,0 +1,35 @@
+<%- include('header'); -%>
+
+  <main class="w-75 mx-auto">
+    <hr>
+    <h2 class="display-6 mb-3">Cadastro</h2>
+
+    <form id="form-cadastro">
+      <div class="mb-3">
+        <label for="input-usuario" class="form-label">Usuário</label>
+        <input type="text" class="form-control" id="input-usuario" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="input-senha" class="form-label">Senha</label>
+        <input type="password" class="form-control" id="input-senha" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="input-role" class="form-label">Role</label>
+        <select class="form-control" id="input-role" required> 
+          <option value="usuario"> Usuario </option>
+          <option value="admin"> Admin</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary mb-3">Cadastrar</button>
+      <p>Já possui cadastro? <a href="/login" class="link-primary">Faça o login</a></p>
+      </form>
+
+      <p id="p-mensagem" style="color: red;"></p>
+  </main>
+ 
+  <script src="/cadastro.js" type="module"></script>
+
+  <%- include('footer'); -%>
