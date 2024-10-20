@@ -1,159 +1,42 @@
-﻿Cirurgia Geral;2;
-Cirurgia Pediátrica;1;1
-Cirurgia Plástica;1;1
-Cirurgia Vascular;0;
-Dermatologia;4;5
-Ortopedia - Cirurgia;2;2
-Otorrinolaringologia;3;5
-Proctologia;1;1
-Urologia;1;1
-Alergologia - Imunologia;1;1
-Anestesiologia - Avaliação Colonoscopia;4;4
-Cardiologia;2;2
-Cardiologia Pediátrica;1;
-Cirurgia Vascular;1;2
-Dermatologia;4;4
-Dermatologia/Plástica - Tumor de Pele;1;1
-Endocrinologia;3;3
-Endocrinologia Pediátrica;0;
-Fisioterapia - Geral;1;
-Gastroclínica;4;2
-Ginecologia;1;1
-Hematologia;2;2
-Infectologia;0;
-Nefrologia;2;2
-Neurologia;3;3
-Nutrição - Avaliação;1;
-Oftalmologia;2;2
-Oftalmologia - Catarata;5;3
-Oftalmologia - Pterígio;1;1
-Ortopedia;8;8
-Otorrinolaringologia;5;6
-Pneumologia;1;1
-Proctologia;0;
-Reumatologia;2;2
-Urologia;1;1
-AUDIOMETRIA - EXTERNO;1;7
-COLONOSCOPIA - EXTERNO - TARDE;4;4
-DENSITOMETRIA OSSEA - EXTERNO;1;1
-ECOCARDIOGRAMA - EXTERNO;13;12
-ECOCARDIOGRAMA INFANTIL - EXTERNO;0;
-ELETROENCEFALOGRAMA - EXTERNO;1;1
-ELETRONEUROMIOGRAFIA - EXTERNO;2;2
-ENDOSCOPIA - EXTERNO;8;9
-RAIO X - EXTERNO;10;3
-TESTE ERGOMETRICO - EXTERNO;1;1
-TOMOGRAFIA - EXTERNO;10;6
-US DOPPLER VASCULAR - EXTERNO;10;9
-US GERAL - EXTERNO;15;12
-US MUSCULO ESQUELETICO - EXTERNO;10;3
-Cirurgia do Aparelho Digestivo;0;
-Enfermagem - Ostomizados;2;
-Enfermagem - Preparo Colonoscopia;2;1
-Fisiatria - OPM;0;1
-Fisiatria - Reabilitação Física;0;
-Neurologia Pediátrica;6;6
-Oftalmologia - Reabilitação Visual;1;
-Reabilitação - Auditiva;0;
-BIOPSIA DE FIGADO - ADULTO;0;
-BIOPSIA DE PROSTATA - ADULTO;0;
-BIOPSIA DE PULMAO;0;
-BIOPSIA TIREOIDE - ADULTO;2;2
-BRONCOSCOPIA;0;
-CINTILOGRAFIA DE MIOCARDIO P/ AVALIACAO DA PERFUSAO EM SITUACAO DE ESTRESSE;7;7
-CINTILOGRAFIA DE MIOCARDIO P/ AVALIACAO DA PERFUSAO EM SITUACAO DE REPOUSO;7;8
-CINTILOGRAFIA DE MIOCÁRDIO PROTOCOLO DE 1 DIA - NOVO;6;6
-CINTILOGRAFIA DE OSSOS C/ OU S/ FLUXO SANGUINEO (CORPO INTEIRO);1;1
-CINTILOGRAFIA DE PULMÃO POR INALAÇÃO E PERFUSÃO;0;
-CINTILOGRAFIA DE TIREOIDE C/ OU S/ CAPTAÇÃO;0;
-CINTILOGRAFIA P/ PESQUISA DE REFLUXO GASTRO-ESOFAGICO;0;
-CINTILOGRAFIA RENAL DINÂMICO (DTPA) - NOVO;0;
-CINTILOGRAFIA RENAL QUALITATIVA (DMSA) - NOVO;0;
-CISTOSCOPIA - EXTERNO;1;
-ENDOSCOPIA - EXTERNO;1;1
-LARINGOSCOPIA - EXTERNO;0;
-MAMOGRAFIA - EXTERNO;8;8
-MAMOGRAFIA RASTREAMENTO - PROGRAMA;8;25
-RESSONANCIA CRANIO - EXTERNO (ALEXANDRE CECIN);0;
-RESSONANCIA GERAL - EXTERNO (ALEXANDRE CECIN);1;1
-RESSONANCIA PELVE - EXTERNO (ALEXANDRE CECIN);0;
-TOMOGRAFIA ABDOME SUPERIOR - EXTERNO (ALEXANDRE CECIN);1;
-TOMOGRAFIA GERAL - EXTERNO (ALEXANDRE CECIN);0;
-TOMOGRAFIA GERAL COM SEDAÇÃO - EXTERNO (ALEXANDRE CECIN);0;
-TOMOGRAFIA PELVE - EXTERNO (ALEXANDRE CECIN);0;
-TOMOGRAFIA SEM SEDAÇÃO - CARLOS CAVALCANTE HI;1;
-TOMOGRAFIA TORAX - EXTERNO (ALEXANDRE CECIN);0;
-US ABDOMINAL TOTAL - EXTERNO (PAULA NARDOCCI);1;1
-US GERAL - EXTERNO (PAULA NARDOCCI);1;
-US PROSTATA VIA ABDOMINAL - EXTERNO (PAULA NARDOCCI);0;
-Otorrinolaringologia - Deficiência Auditiva;2;
-HB - CATETERISMO - TRIAGEM;1;2
-RESSONÂNCIA MAGNÉTICA - EXTERNO DRS V;1;
-Cirurgia Geral;4;3
-Cirurgia Pediátrica;1;1
-Enfermagem;1;
-Ginecologia - Avaliação Histeroscopia;1;
-Ginecologia - Uroginecologia;1;1
-Ginecologia Cirúrgica;1;1
-Ortopedia - Joelho;4;5
-Ortopedia - Mão;1;1
-Ortopedia - Ombro;7;2
-Ortopedia - Pé e Tornozelo;0;
-Ortopedia - Quadril;0;
-Otorrinolaringologia;1;
-Urologia;2;3
-ANGIOTOMOGRAFIA - EXTERNO;2;2
-COLONOSCOPIA (COLOSCOPIA) - EXTERNO;1;
-ECOCARDIOGRAMA - EXTERNO;6;6
-ENDOSCOPIA - EXTERNO;10;1
-RESSONANCIA MAGNÉTICA - EXTERNO;20;3
-RX - EXTERNO;5;
-TOMOGRAFIA - EXTERNO;5;4
-ULTRASSONOGRAFIA DOPPLER GERAL - DR. ROBERTO AUGUSTO;6;
-US GERAL - EXTERNO;2;1
-USG DOPPLER VASCULAR GERAL - EXTERNO;11;9
-Oftalmologia;9;11
-Oftalmologia - Catarata;2;1
-Oftalmologia - Estrabismo;0;
-Oftalmologia - Pterígio;2;1
-Oftalmologia - Retina;3;3
-Oftalmologia - YAG LASER;1;1
-Cardiologia;2;2
-Cardiologia - Arritmia;1;
-Cardiologia - Avaliação Marca-passo;0;
-Cardiologia - Avaliação Pré-cirúrgica;0;
-Cirurgia Cabeça e Pescoço;0;
-Cirurgia Geral;2;1
-Cirurgia Pediátrica;0;
-Dermatologia;1;1
-Dermatologia - Pediatria;0;
-Endocrinologia Pediátrica;0;
-Ginecologia - Endocrinologia;1;
-Ginecologia - Uroginecologia;0;
-Ginecologia Cirúrgica;1;1
-Nefrologia;1;1
-Neurocirurgia;1;1
-Neurologia;3;3
-Neurologia Pediátrica - Epilepsia;0;
-Oncologia - Ortopedia;1;
-Ortopedia - Coluna;1;1
-Ortopedia - Joelho;1;1
-Ortopedia - Quadril;0;
-Urologia - Cirurgia;1;1
-Urologia Pediátrica;0;
-CATETERISMO CARDÍACO - EXTERNO;2;2
-COLONOSCOPIA EXTERNO;4;4
-ECOCARDIOGRAMA -EXTERNO;5;6
-ENDOSCOPIA - EXTERNO;4;4
-HOLTER 24 HORAS -EXTERNO;6;6
-RAIO X SIMPLES EXTERNO;20;
-RESSONANCIA MAGNETICA - EXTERNO;15;21
-TESTE ERGOMETRICO - EXTERNO;5;5
-TOMOGRAFIA - EXTERNO;9;9
-US GERAL - EXTERNO;3;
-US OBSTETRICO - EXTERNO;3;
-Cirurgia Eletiva - Avaliação Cirurgia Vascular Varizes;2;4
-Cirurgia Eletiva - Avaliação Colecistectomia;1;
-Cirurgia Eletiva - Avaliação Hérnia;0;
-Cirurgia Eletiva - Avaliação Urologia Vasectomia;0;
-Cirurgia Geral;0;
+﻿outubro
+Abc;10
+Acupuntura;101
+Alergologia;102
+Alergologia - Imunologia;103
+Cardiologia Pediátrica;1
+Cirurgia Eletiva - Avaliação Ortopedia Joelho;1
+Cirurgia Plástica;43
+Cirurgia Torácica;1
+Cirurgia Torácica - Síndrome Poland;1
+Cirurgia Vascular;32
+Dermatologia;76
+Dermatologia - Acne;1
+Dermatologia - Cirurgia;40
+Endocrinologia;1
+Endocrinologia Pediátrica;3
+Fisiatria;39
+Fisiatria - OPM;1
+Fisiatria - Reabilitação Física;5
+Fisioterapia;1
+Gastrocirurgia;1
+Gastroclínica;11
+Gastroenterologia - Imunologia - Esofagite Eosinofílica;2
+Geriatria;2
+Ginecologia;4
+Ginecologia - Cir. Ambulatorial;1
+Ginecologia Cirúrgica;3
+Ginecologia Obstetrícia;1
+Hematologia;1
+Hepatologia;2
+Infectologia;1
+Nefrologia;2
+Nefrologia Pediatrica;1
+Neurocirurgia;28
+Neurocirurgia Pediátrica;1
+Neurologia;72
+Neurologia Pediátrica;89
+Odontologia;1
+Oftalmologia;151
+Oftalmologia - Avaliação Cirúrgica;1
+Oftalmologia - Avaliação Glaucoma;1
+Oftalmologia - Avaliação YAG LASER;3
