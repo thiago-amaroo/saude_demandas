@@ -1,14 +1,14 @@
 import fs from "fs";
-import modeloAgendados from "../models/Demanda-agendado.js";
+import modeloAgendamentos from "../models/Demanda-agendamentos.js";
 
 //Atualiza a colecao agendados com consultas e exames juntos
 
 class DemandaAgendadosController {
 
-  static atualizaAgendados = async (req, res) => {
+  static atualizaAgendamentos = async (req, res) => {
     //deletando todos os documentos da colecao no mongodb atlas
     try { 
-      await modeloAgendados.deleteMany({});
+      await modeloAgendamentos.deleteMany({});
     } catch (erro) {
       console.log(erro);
     }
@@ -25,7 +25,7 @@ class DemandaAgendadosController {
     
         //esse array percorre o array de string
         const arrayObjetos = array1.map(( elemento ) => {
-          const arrayInternoDividido = elemento.split(";"); //Ex: saida:  [  ['acupuntura', '2', '1']  ]
+          const arrayInternoDividido = elemento.split(";"); //Ex: saida:  [  ['raio-x', 'data do agendamento]  ]
           const arrayObjetosInterno = { 
             recurso: arrayInternoDividido[0],
             oferta: Number(arrayInternoDividido[1]),
@@ -43,13 +43,13 @@ class DemandaAgendadosController {
             //resultado: acumputura, 3, 2 - total de 3 vagas e 2 agendamentos
           
             //recursoExiste é o objeto com dados atuais do recurso que já está no bd
-            const recursoExiste = await modeloAgendados.findOne( { recurso: arrayObjetos[i].recurso } ); //Ex. saida: {recurso: dermatologia, oferta: 2, agendado: 1}  
+            const recursoExiste = await modeloAgendamentos.findOne( { recurso: arrayObjetos[i].recurso } ); //Ex. saida: {recurso: dermatologia, oferta: 2, agendado: 1}  
 
             //se ja tem o nome do recurso, soma a oferta e tambem o agendamento
             if( recursoExiste ) {
-              await modeloAgendados.updateOne( { recurso: recursoExiste.recurso }, { oferta: recursoExiste.oferta + arrayObjetos[i].oferta, agendado: recursoExiste.agendado + arrayObjetos[i].agendado } );
+              await modeloAgendamentos.updateOne( { recurso: recursoExiste.recurso }, { oferta: recursoExiste.oferta + arrayObjetos[i].oferta, agendado: recursoExiste.agendado + arrayObjetos[i].agendado } );
             } else {
-              let agendados = new modeloAgendados(arrayObjetos[i]);
+              let agendados = new modeloAgendamentos(arrayObjetos[i]);
               await agendados.save();
             }
           }

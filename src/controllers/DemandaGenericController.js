@@ -1,5 +1,5 @@
 import fs from "fs";
-import modeloAgendados from "../models/Demanda-agendado.js";
+import modeloAgendados from "../models/Demanda-agendamentos.js";
 
 
 class DemandaGenericController {
@@ -27,7 +27,6 @@ class DemandaGenericController {
     let arrayNomes =[];
     const consultaNomes = await this.modeloDemanda.find({}, [campoDemanda]);
     consultaNomes.forEach((elemento) => arrayNomes.push( elemento[ [campoDemanda] ] ) );
-    console.log(arrayNomes);
     
     //lendo o arquivo que foi feito o upload no midleware anterior a chamada do controlador
     fs.readFile("uploadsTemp/demandasDb.csv", "utf-8", async (erro, conteudo) => { 
@@ -36,37 +35,64 @@ class DemandaGenericController {
         if(erro) throw erro;
       
         //esse array tira os \r da string e divide a string de texto na quebra de linha
-        //Ex: saida:  ['acupuntura;2','alergologia;6']
+        //Primeira linha: ano. Segunda linha: mes
+        //Ex: saida:  [2024, 'janeiro', 'acupuntura;2','alergologia;6']
         const array1 = conteudo.toLowerCase().replaceAll("\r","").split("\n");
-        const mes = array1[0].trim();
+        const ano = array1[0].trim();
+        const mes = array1[1].trim();
        
         try {
-          //esse array percorre o array de string
-          for(let i = 1; i < array1.length; i++) {
+          //esse array percorre o array de string. Comeca no indice 2 pq indice 0 = ano e indice 1 = mes (as duas primeiras linhas do arquivo)
+          for(let i = 2; i < array1.length; i++) {
             const arrayInternoDividido = array1[i].split(";"); //Ex: saida:  [  ['acupuntura', '2']  ]
             
-            //Se nome do recurso nao existe no bd, precisa incluir com todos os meses zerados e apensa mes atual com valor
+            //Se nome do recurso nao existe no bd, precisa o recurso com o ano com todos os meses zerados e apenas mes atual com valor
             if(!arrayNomes.includes(arrayInternoDividido[0])) {
               const arrayObjetosInterno = { 
                 [campoDemanda]: arrayInternoDividido[0],
-                [mes]: arrayInternoDividido[1]
+                pacientes: { 
+                  ano: ano,  
+                  [mes]: arrayInternoDividido[1]
+                }
               };
               try {
                 let demanda = new this.modeloDemanda(arrayObjetosInterno);
-                await demanda.save();
+                await demanda.save(); 
         
               } catch(errobd) {
                 console.log(errobd);
               }
-            } else { //se recurso ja existe no bd, apenas atualizar o mes corrente com valores
-              try {
-                await this.modeloDemanda.updateOne( { [campoDemanda]: arrayInternoDividido[0] }, { [mes]: arrayInternoDividido[1] } );
+            } else { //se recurso ja existe no bd, verificar se ja existe o ano criado no recurso
+              const recurso = await this.modeloDemanda.findOne( { [campoDemanda]: arrayInternoDividido[0] } );
+              //Se ano nao existe, incluir:
+              //pegando dados existentes no objeto ano do array pacientes. Ex: anoObjeto = { ano: '2023', outubro: '10' } }
+              const anoObjeto = recurso.pacientes.find((elemento) => elemento.ano === ano );
+
+              if( !anoObjeto ) {
+                const objetoAtualizado = {
+                  ano: ano, 
+                  [mes]: arrayInternoDividido[1]
+                };
+                //inserir objetoAtualizado no array pacientes 
+                await this.modeloDemanda.updateOne( { [campoDemanda]: arrayInternoDividido[0] }, { $push: { pacientes: objetoAtualizado } });
                 
-              } catch (errobd) {
-                console.log(errobd);
+              } else {
+                //Se ja tem nome do recurso e ja tem o ano a ser atualizado no bd, adiciona ou atualiza o mes solicitado no arquivo
+                const recurso = await this.modeloDemanda.findOne( { [campoDemanda]: arrayInternoDividido[0] } );
+                let item = recurso.pacientes.find((elemento) => elemento.ano === ano); 
+                item[mes] = arrayInternoDividido[1];
+                //aviso ao mongoose qual campo foi altera. Se nao tiver um schema estruturado, preciso fazer isso pq mongoose usa setters do schema para saber qual campo foi modificado
+                //recurso.markModified("pacientes");
+                console.log(recurso);
+                await recurso.save();
+                
+                //sent respnse to client
+                
+
               }
             }
           }
+  
           res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: `Banco de dados ${this.nomeDemanda} atualizado com sucesso.`, role: req.role, usuario: req.usuario } );
 
         } catch(errobd) {
@@ -91,45 +117,59 @@ class DemandaGenericController {
     if(this.nomeDemanda === "demandas_exames") {  nomeRecurso = "exame"; }
 
     const dataAtual = new Date();
-    const mesAtual = dataAtual.getMonth();
+    const mesAtual = dataAtual.getMonth(); //retorna numero de 0 a 11. Janeiro = 0
     const meses = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
     const mesAtualExtenso = meses[mesAtual];
-
+    const anoAtual = dataAtual.getFullYear().toString();
+    console.log(anoAtual);
     try {
-      //busca todos os recursos, pegando apenas os campos nome do recurso e quantidade de pacientes do mes atual
-      const demandasResultado = await this.modeloDemanda.find( {},  [ [nomeRecurso],[mesAtualExtenso]] ).sort( { [nomeRecurso]: 1 } );
+      //busca todos os recursos, pegando apenas os campos
+      const demandasResultado = await this.modeloDemanda.find( {} ).sort( { [nomeRecurso]: 1 } );
+      //console.log(demandasResultado);
 
-      let demandasFinal = [];
+      const demandasResultadoMesAtual = demandasResultado.map((elemento) => {
+        const objeto = { [nomeRecurso]: elemento[ [nomeRecurso] ] };
 
-      for (let i = 0; i < demandasResultado.length; i++ ) {
-        //console.log(demandasResultado[i]);
-        const agendados = await modeloAgendados.findOne ( { recurso: demandasResultado[i][nomeRecurso]  } );
-        //console.log(agendados);
-        if(agendados) {
-          const objetoFinal = {
-            ...demandasResultado[i]._doc,
-            qtde_pacientes: demandasResultado[i][mesAtualExtenso],
-            oferta: agendados.oferta,
-            agendado: agendados.agendado
-          };
-          demandasFinal.push(objetoFinal);
-        } else {
-          const objetoFinal = {
-            ...demandasResultado[i]._doc,
-            qtde_pacientes: demandasResultado[i][mesAtualExtenso],
-            oferta: "-",
-            agendado: "-"
-          };
-          demandasFinal.push(objetoFinal);
-        }
+        const buscaAno = elemento.pacientes.find((elemento2) => elemento2.ano === anoAtual );
+        objeto.qtde_pacientes =  buscaAno[mesAtualExtenso];
+        return objeto;
+      });
+
+      //console.log(demandasResultadoMesAtual);
+
+      //let demandasFinal = [];
+
+      // for (let i = 0; i < demandasResultado.length; i++ ) {
+      //   //
+
+      //   //console.log(demandasResultado[i]);
+      //   const agendados = await modeloAgendados.findOne ( { recurso: demandasResultado[i][nomeRecurso]  } );
+      //   //console.log(agendados);
+      //   if(agendados) {
+      //     const objetoFinal = {
+      //       ...demandasResultado[i]._doc,
+      //       qtde_pacientes: demandasResultado[i][mesAtualExtenso],
+      //       oferta: agendados.oferta,
+      //       agendado: agendados.agendado
+      //     };
+      //     demandasFinal.push(objetoFinal);
+      //   } else {
+      //     const objetoFinal = {
+      //       ...demandasResultado[i]._doc,
+      //       qtde_pacientes: demandasResultado[i][mesAtualExtenso],
+      //       oferta: "-",
+      //       agendado: "-"
+      //     };
+      //     demandasFinal.push(objetoFinal);
+      //   }
 
         
          
-      }; 
-      console.log(demandasFinal); 
+      // }; 
+      // console.log(demandasFinal); 
        
 
-      res.status(200).render(`${this.nomeDemanda}`, { demandas: demandasFinal, role: req.role, usuario: req.usuario });
+      res.status(200).render(`${this.nomeDemanda}`, { demandas: demandasResultadoMesAtual, role: req.role, usuario: req.usuario });
 
     } catch(erro) {
       console.log(erro);

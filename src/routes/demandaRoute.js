@@ -3,7 +3,7 @@ import estaLogado from "../middlewares/estaLogado.js";
 import upload from "../utils/uploadArquivo.js";
 import DemandaConsultaController from "../controllers/DemandaConsultaController.js";
 import DemandaExameController from "../controllers/DemandaExameController.js";
-import DemandaAgendadosController from "../controllers/DemandaAgendadosController.js";
+import DemandaAgendadosController from "../controllers/DemandaAgendamentosController.js";
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router
   .get("/demandas/exames", estaLogado, (req, res) => demandaExameController.listaDemandas(req, res))
   .post("/admin/demandas/exames", estaLogado, upload.single("file"), (req, res) => demandaExameController.atualizaDemandas(req, res))
 
-  .post("/admin/demandas/agendados", estaLogado, upload.single("file"), DemandaAgendadosController.atualizaAgendados );
+  .post("/admin/demandas/agendamentos", estaLogado, upload.single("file"), DemandaAgendadosController.atualizaAgendamentos );
 
   
 export default router;
