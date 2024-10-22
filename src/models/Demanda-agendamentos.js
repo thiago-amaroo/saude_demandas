@@ -1,11 +1,10 @@
 import mongoose from "mongoose";
 
-const demandaAgendadoSchema = new mongoose.Schema(
+const demandaAgendamentoSchema = new mongoose.Schema(
   {
     id: { type: String },
     recurso : { type: String, required: [true, "Nome do recurso obrigatorio"] },
-    oferta: { type: Number, defatul: 0 },
-    agendado: { type: Number, defatul: 0 },
+    data: { type: String, defatul: 0 },
 
   },
   {
@@ -13,6 +12,6 @@ const demandaAgendadoSchema = new mongoose.Schema(
   }
 );
 
-const demandasAgendados = mongoose.model("agendados", demandaAgendadoSchema);
+const demandasAgendados = mongoose.model("agendamentos", demandaAgendamentoSchema);
 
 export default demandasAgendados;

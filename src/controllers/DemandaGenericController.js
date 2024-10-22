@@ -1,5 +1,5 @@
 import fs from "fs";
-import modeloAgendados from "../models/Demanda-agendamentos.js";
+import modeloAgendamentos from "../models/Demanda-agendamentos.js";
 
 
 class DemandaGenericController {
@@ -11,11 +11,11 @@ class DemandaGenericController {
 
   async atualizaDemandas(req, res)  {
     //deletando todos os documentos da colecao no mongodb atlas
-    // try { 
-    //   await this.modeloDemanda.deleteMany({});
-    // } catch (erro) {
-    //   console.log(erro);
-    // }
+    try { 
+      await this.modeloDemanda.deleteMany({});
+    } catch (erro) {
+      console.log(erro);
+    }
 
     //definindo se nome do campo do bd será especialidade(consultas) ou exame (exames)
     let campoDemanda = "";
@@ -121,55 +121,29 @@ class DemandaGenericController {
     const meses = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
     const mesAtualExtenso = meses[mesAtual];
     const anoAtual = dataAtual.getFullYear().toString();
-    console.log(anoAtual);
+
+    let demandasFinal = [];
+
     try {
       //busca todos os recursos, pegando apenas os campos
       const demandasResultado = await this.modeloDemanda.find( {} ).sort( { [nomeRecurso]: 1 } );
       //console.log(demandasResultado);
 
-      const demandasResultadoMesAtual = demandasResultado.map((elemento) => {
-        const objeto = { [nomeRecurso]: elemento[ [nomeRecurso] ] };
+      for (let i = 0; i < demandasResultado.length; i++ ) {
 
-        const buscaAno = elemento.pacientes.find((elemento2) => elemento2.ano === anoAtual );
+        const objeto = { [nomeRecurso]: demandasResultado[i][ [nomeRecurso] ] };
+
+        const buscaAno = demandasResultado[i].pacientes.find((elemento2) => elemento2.ano === anoAtual );
         objeto.qtde_pacientes =  buscaAno[mesAtualExtenso];
-        return objeto;
-      });
 
-      //console.log(demandasResultadoMesAtual);
+        //Inserindo quantidade de pacientes agendados do mes
+        const agendados = await modeloAgendamentos.find( { recurso: demandasResultado[i][nomeRecurso]  } ).countDocuments();
+        objeto.agendado = agendados;
+        console.log(agendados);
+        demandasFinal.push(objeto);
+      };
 
-      //let demandasFinal = [];
-
-      // for (let i = 0; i < demandasResultado.length; i++ ) {
-      //   //
-
-      //   //console.log(demandasResultado[i]);
-      //   const agendados = await modeloAgendados.findOne ( { recurso: demandasResultado[i][nomeRecurso]  } );
-      //   //console.log(agendados);
-      //   if(agendados) {
-      //     const objetoFinal = {
-      //       ...demandasResultado[i]._doc,
-      //       qtde_pacientes: demandasResultado[i][mesAtualExtenso],
-      //       oferta: agendados.oferta,
-      //       agendado: agendados.agendado
-      //     };
-      //     demandasFinal.push(objetoFinal);
-      //   } else {
-      //     const objetoFinal = {
-      //       ...demandasResultado[i]._doc,
-      //       qtde_pacientes: demandasResultado[i][mesAtualExtenso],
-      //       oferta: "-",
-      //       agendado: "-"
-      //     };
-      //     demandasFinal.push(objetoFinal);
-      //   }
-
-        
-         
-      // }; 
-      // console.log(demandasFinal); 
-       
-
-      res.status(200).render(`${this.nomeDemanda}`, { demandas: demandasResultadoMesAtual, role: req.role, usuario: req.usuario });
+      res.status(200).render(`${this.nomeDemanda}`, { demandas: demandasFinal, role: req.role, usuario: req.usuario });
 
     } catch(erro) {
       console.log(erro);

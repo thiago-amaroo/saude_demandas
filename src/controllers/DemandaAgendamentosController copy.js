@@ -28,7 +28,7 @@ class DemandaAgendadosController {
           const arrayInternoDividido = elemento.split(";"); //Ex: saida:  [  ['raio-x', 'data do agendamento]  ]
           const arrayObjetosInterno = { 
             recurso: arrayInternoDividido[0],
-            data: arrayInternoDividido[1]
+            agendado: Number(arrayInternoDividido[1])
           };
           return arrayObjetosInterno;
         } );
@@ -36,15 +36,27 @@ class DemandaAgendadosController {
         //inserindo objetos do array no BD
         try {
           for (let i = 0; i < arrayObjetos.length; i++ ) {
-            let agendamentos = new modeloAgendamentos(arrayObjetos[i]);
-            await agendamentos.save();
-          }
+            //Preciso verificar se recurso ja tem no BD. Pq no arquivo csv recursos se repetem. Se já existe, precisa somar
+            //Ex: acumputura, 1, 1 - em barretos tinha 1 vaga, agendei 1 pessoa
+            //acumptura, 2, 1 - em bebedouro tinha 2 vagas e agendei 1 pessoa
+            //resultado: acumputura, 3, 2 - total de 3 vagas e 2 agendamentos
           
-          res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: "Banco de dados Agendamentos atualizado com sucesso.", role: req.role, usuario: req.usuario } );
+            //recursoExiste é o objeto com dados atuais do recurso que já está no bd
+            const recursoExiste = await modeloAgendamentos.findOne( { recurso: arrayObjetos[i].recurso } ); //Ex. saida: {recurso: dermatologia, oferta: 2, agendado: 1}  
+
+            //se ja tem o nome do recurso, soma a oferta e tambem o agendamento
+            if( recursoExiste ) {
+              await modeloAgendamentos.updateOne( { recurso: recursoExiste.recurso }, { oferta: recursoExiste.oferta + arrayObjetos[i].oferta, agendado: recursoExiste.agendado + arrayObjetos[i].agendado } );
+            } else {
+              let agendados = new modeloAgendamentos(arrayObjetos[i]);
+              await agendados.save();
+            }
+          }
+          res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: "Banco de dados Agendados atualizado com sucesso.", role: req.role, usuario: req.usuario } );
             
         } catch(errobd) {
           console.log(errobd);
-          res.status(200).render("areaAdmin", { bdAtualizado: false, mensagem: "Erro ao atualizar o Banco de dados Agendamentos.", role: req.role, usuario: req.usuario } );
+          res.status(200).render("areaAdmin", { bdAtualizado: false, mensagem: "Erro ao atualizar o Banco de dados Agendados.", role: req.role, usuario: req.usuario } );
         }
           
         
