@@ -1,6 +1,6 @@
   <%- include('header'); -%>
 
-  <main class="w-75 mx-auto">
+  <main >
     <hr>
     <h2 class="display-6 mb-3">Demandas Consultas </h2>
     
@@ -22,7 +22,9 @@
         </tr>
         
         <% for(var i=0; i < demandas.length; i++) {%>
-            <tr>
+
+            <tr id="<%= demandas[i]._id %>" class="botao">
+
                 <td> <%= demandas[i].especialidade %>  </td>
             
                 <td> <%= demandas[i].qtde_pacientes %> </td> 
@@ -36,5 +38,27 @@
     </table>
   </main>
   
+  <!-- Modal para abrir detalhes da especialidade -->
+<div class="modal fade" id="ModalDetalhes" tabindex="-1" aria-labelledby="ModalDetalhesLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5" id="ModalDetalhesLabel" style="color:rgb(62, 75, 175)"> Detalhes do Recurso  </h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="modal-body" class="modal-body">
+            <div id="modal-mensagem-erro" class="alert alert-danger" role="alert"> </div>
+            <div id="modal-mensagem-sucesso" class="alert alert-success" role="alert"> </div>
+            <div id="modal-conteudo"> </div>
+        </div>
+        <div class="modal-footer">
+          <button id="button-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+    </div>
+ 
+    <script src="/demandas.js" type="module"></script>
   
   <%- include('footer'); -%>

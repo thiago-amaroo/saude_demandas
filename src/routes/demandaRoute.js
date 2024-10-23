@@ -17,7 +17,9 @@ router
   .get("/demandas/exames", estaLogado, (req, res) => demandaExameController.listaDemandas(req, res))
   .post("/admin/demandas/exames", estaLogado, upload.single("file"), (req, res) => demandaExameController.atualizaDemandas(req, res))
 
-  .post("/admin/demandas/agendamentos", estaLogado, upload.single("file"), DemandaAgendadosController.atualizaAgendamentos );
+  .post("/admin/demandas/agendamentos", estaLogado, upload.single("file"), DemandaAgendadosController.atualizaAgendamentos )
+
+  .get("/demandas/consultas/:idRecurso/:ano", estaLogado, (req, res) => demandaConsultaController.mostraDetalhesDemanda(req, res));
 
   
 export default router;

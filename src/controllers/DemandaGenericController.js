@@ -131,7 +131,10 @@ class DemandaGenericController {
 
       for (let i = 0; i < demandasResultado.length; i++ ) {
 
-        const objeto = { [nomeRecurso]: demandasResultado[i][ [nomeRecurso] ] };
+        const objeto = { 
+          _id: demandasResultado[i]["_id"],
+          [nomeRecurso]: demandasResultado[i][ [nomeRecurso] ] 
+        };
 
         const buscaAno = demandasResultado[i].pacientes.find((elemento2) => elemento2.ano === anoAtual );
         objeto.qtde_pacientes =  buscaAno[mesAtualExtenso];
@@ -139,7 +142,6 @@ class DemandaGenericController {
         //Inserindo quantidade de pacientes agendados do mes
         const agendados = await modeloAgendamentos.find( { recurso: demandasResultado[i][nomeRecurso]  } ).countDocuments();
         objeto.agendado = agendados;
-        console.log(agendados);
         demandasFinal.push(objeto);
       };
 
@@ -149,6 +151,42 @@ class DemandaGenericController {
       console.log(erro);
     }
   };
+
+
+
+  async mostraDetalhesDemanda (req, res) {
+    let nomeRecurso = "";
+    if(this.nomeDemanda === "demandas_consultas") {  nomeRecurso = "especialidade"; }
+    if(this.nomeDemanda === "demandas_exames") {  nomeRecurso = "exame"; }
+
+    const { idRecurso, ano } = req.params;
+
+    try {
+      const demandaResultado = await this.modeloDemanda.findOne( { _id: idRecurso } );
+      const demandaResultadoAno = demandaResultado.pacientes.find((elemento) => elemento.ano === ano);
+
+      //colocando em um array [ [janeiro, 0], [fevereiro, 10]... ]
+      const arrayMeses = Object.entries(demandaResultadoAno._doc).slice(1);
+    
+      //pegando o maior valor de pacientes dos meses do ano para usar no calculo de porcentagem do grafico
+      function compareFn(a, b) {
+        return b - a;
+      }
+      const maiorValorPacienteMes = Object.values(demandaResultadoAno._doc).sort(compareFn) [1]; //Ex: [2024, 0, 6...]. Ordeno por desc: [2024, 6, 0..] e pego o segundo elemento, excluindo o primeiro que é o ano
+  
+      const demandaResultadoFinal = {
+        recurso: demandaResultado[nomeRecurso],
+        meses: arrayMeses,
+        maiorValorPaciente: maiorValorPacienteMes,
+        ano: ano
+      };
+
+      res.status(200).json(demandaResultadoFinal);
+
+    } catch (erro) {
+      console.log(erro);
+    }
+  }
 
 
 

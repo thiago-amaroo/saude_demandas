@@ -20,7 +20,10 @@ app.use(express.json());
 
 const caminhoAtual = url.fileURLToPath(import.meta.url);
 const diretorioPublico = path.join(caminhoAtual, "../..", "views");
+console.log(diretorioPublico);
 app.use(express.static(diretorioPublico));
+
+
 
 routes(app);
 
