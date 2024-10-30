@@ -2,41 +2,43 @@
 
   <main class="w-75 mx-auto">
     <hr>
-    <h2 class="display-6 mb-3">Demandas Exames </h2>
+    <h2 class="display-6 mb-3">Demandas Recursos Internos </h2>
+    
 
     <table class="table table-striped table-hover" >
         <tr> 
             <td>
-                <strong> Exame </strong> 
+                <strong> Recurso </strong> 
             </td>
             <td style="text-align: center;">
-                <strong>  Pacientes </strong>
+                <strong>  Demanda </strong>
             </td>
-              <td style="text-align: center;">
-                <strong>  Agendados /  Mês </strong>
+            <td style="text-align: center;">
+                <strong>  Atendidos / Mês </strong>
             </td>
         </tr>
         
-        <% for(var i=0; i < demandas.length; i++) {%>
-            <tr  id="<%= demandas[i]._id %>" class="botao" style="cursor: pointer">
-                <td> <%= demandas[i].exame %>  </td>
-            
-                <td style="text-align: center;"> <%= demandas[i].qtde_pacientes %> </td> 
+        <% for(var i=0; i < demandasRecursosInternos.length; i++) {%>
 
-                 <td style="text-align: center;"> <%= demandas[i].agendado %> </td> 
+            <tr id="<%= demandasRecursosInternos[i]._id %>" class="botao" style="cursor: pointer">
+
+                <td> <%= demandasRecursosInternos[i].recurso %>  </td>
+            
+                <td style="text-align: center;"> <%= demandasRecursosInternos[i].demanda %> </td> 
+
+                <td style="text-align: center;"> <%= demandasRecursosInternos[i].atendidos %> </td> 
             </tr>
-            
         <% } %>
-
-        <tr> 
-            <td> <b> Total: </b> </td>
-            <td style="text-align: center;"> <b> <%= somaPacientesDemanda %> </b></td>
-            <td style="text-align: center;"> <b> <%= somaPacientesAgendados %> </b> </td>
-        </tr>
+            
+            <tr> 
+              <td> <b> Total: </b> </td>
+              <td style="text-align: center;"> <b> <%= somaPacientesDemanda %> </b></td>
+              <td style="text-align: center;"> <b> <%= somaPacientesAtendidos %> </b> </td>
+            </tr>
     </table>
   </main>
   
-   <!-- Modal para abrir detalhes da especialidade -->
+  <!-- Modal para abrir detalhes da especialidade -->
 <div class="modal fade" id="ModalDetalhes" tabindex="-1" aria-labelledby="ModalDetalhesLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -56,7 +58,7 @@
       </div>
     </div>
     </div>
-
-    <script src="/demandas-exames.js" type="module"></script>
+ 
+    <script src="/demandas-recursos-internos.js" type="module"></script>
   
   <%- include('footer'); -%>

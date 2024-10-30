@@ -4,6 +4,7 @@ import upload from "../utils/uploadArquivo.js";
 import DemandaConsultaController from "../controllers/DemandaConsultaController.js";
 import DemandaExameController from "../controllers/DemandaExameController.js";
 import DemandaAgendadosController from "../controllers/DemandaAgendamentosController.js";
+import RecursoInternoController from "../controllers/RecursoInternoController.js";
 
 const router = express.Router();
 
@@ -19,7 +20,12 @@ router
 
   .post("/admin/demandas/agendamentos", estaLogado, upload.single("file"), DemandaAgendadosController.atualizaAgendamentos )
 
-  .get("/demandas/consultas/:idRecurso/:ano", estaLogado, (req, res) => demandaConsultaController.mostraDetalhesDemanda(req, res));
+  .get("/demandas/consultas/:idRecurso/:ano", estaLogado, (req, res) => demandaConsultaController.mostraDetalhesDemanda(req, res))
+  .get("/demandas/exames/:idRecurso/:ano", estaLogado, (req, res) => demandaExameController.mostraDetalhesDemanda(req, res))
+  .get("/demandas/recursos_internos/:idRecurso/:ano", estaLogado, RecursoInternoController.mostraDetalhesRecursoInterno)
+
+  .get("/demandas/recursos_internos", estaLogado, RecursoInternoController.listaRecursosInternos )
+  .post("/admin/demandas/recursos_internos", estaLogado, upload.single("file"), RecursoInternoController.atualizaRecursosInternos );
 
   
 export default router;

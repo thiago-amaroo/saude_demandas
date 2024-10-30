@@ -24,7 +24,7 @@ function mostraDetalhes(idRecurso, ano) {
   document.querySelector("#modal-mensagem-erro").style.display = "none";
   document.querySelector("#modal-mensagem-sucesso").style.display = "none";  
 
-  fetch(`/demandas/consultas/${idRecurso}/${ano}`, {
+  fetch(`/demandas/recursos_internos/${idRecurso}/${ano}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -35,8 +35,9 @@ function mostraDetalhes(idRecurso, ano) {
     .then(data => {
       console.log(data);
 
-      document.querySelector("#ModalDetalhesLabel").innerHTML = `Recurso ${data.recurso} - Ano: ${data.ano}`;
-      document.querySelector("#modal-conteudo").innerHTML = `
+      document.querySelector("#ModalDetalhesLabel").innerHTML = `Recurso ${data.recurso} - Ano: ${data.ano} - Atendimentos:`;
+      let html ="";
+      html = `
         <select id="troca-ano">
         <option value="2024"> 2024 </option>
         </select>
@@ -44,21 +45,24 @@ function mostraDetalhes(idRecurso, ano) {
 
         <table width="100%"> `;
 
-      for( let i = 0; i < data.meses; i++ ) {
-            
-        document.querySelector("#modal-conteudo").innerHTML =+ `
+      for( let i = 0; i < data.meses.length; i++ ) {
+        html += `
                 <tr>
-                    <td width="20%">
-                        ${data.meses[i][0]}
+                    <td width="10%">
+                        ${ data.meses[i][0].substring(0,3).toUpperCase() }: 
+                    </td>
+                    <td width="8%">
+                        <b> ${data.meses[i][1]} </b>
                     </td>
                     <td> 
-                        <img src="/imgs/barra.png" height="12px" width=100%>
+                        <img src="/imgs/barra.png" height="20px" width=${data.meses[i][2]}%>
                     </td>
                 </tr>
           ` ;
       }
 
-      document.querySelector("#modal-conteudo").innerHTML =+ "</table>";
+      html += "</table>";
+      document.querySelector("#modal-conteudo").innerHTML = html;
     })
     .catch(error => console.log(error));
 }

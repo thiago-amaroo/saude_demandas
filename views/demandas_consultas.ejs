@@ -1,6 +1,6 @@
   <%- include('header'); -%>
 
-  <main >
+  <main class="w-75 mx-auto">
     <hr>
     <h2 class="display-6 mb-3">Demandas Consultas </h2>
     
@@ -10,31 +10,31 @@
             <td>
                 <strong> Especialidade </strong> 
             </td>
-            <td>
+            <td style="text-align: center;">
                 <strong>  Pacientes </strong>
             </td>
-            <td>
-                <strong>  Vagas / Mês </strong>
-            </td>
-            <td>
+            <td style="text-align: center;">
                 <strong>  Agendados / Mês </strong>
             </td>
         </tr>
         
         <% for(var i=0; i < demandas.length; i++) {%>
 
-            <tr id="<%= demandas[i]._id %>" class="botao">
+            <tr id="<%= demandas[i]._id %>" class="botao" style="cursor: pointer">
 
                 <td> <%= demandas[i].especialidade %>  </td>
             
-                <td> <%= demandas[i].qtde_pacientes %> </td> 
+                <td style="text-align: center;"> <%= demandas[i].qtde_pacientes %> </td> 
 
-                <td> <%= demandas[i].oferta %> </td> 
-
-                <td> <%= demandas[i].agendado %> </td> 
+                <td style="text-align: center;"> <%= demandas[i].agendado %> </td> 
             </tr>
-            
         <% } %>
+            
+            <tr> 
+              <td> <b> Total: </b> </td>
+              <td style="text-align: center;"> <b> <%= somaPacientesDemanda %> </b></td>
+              <td style="text-align: center;"> <b> <%= somaPacientesAgendados %> </b> </td>
+            </tr>
     </table>
   </main>
   
@@ -43,7 +43,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title fs-5" id="ModalDetalhesLabel" style="color:rgb(62, 75, 175)"> Detalhes do Recurso  </h4>
+          <h4 class="modal-title fs-5" id="ModalDetalhesLabel" style="color:rgb(62, 75, 175)">  </h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div id="modal-body" class="modal-body">
@@ -52,13 +52,13 @@
             <div id="modal-conteudo"> </div>
         </div>
         <div class="modal-footer">
-          <button id="button-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="button-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
           
         </div>
       </div>
     </div>
     </div>
  
-    <script src="/demandas.js" type="module"></script>
+    <script src="/demandas-consultas.js" type="module"></script>
   
   <%- include('footer'); -%>
