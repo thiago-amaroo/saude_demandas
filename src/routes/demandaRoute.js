@@ -12,16 +12,20 @@ const demandaConsultaController = new DemandaConsultaController();
 const demandaExameController = new DemandaExameController();
 
 router
-  .get("/demandas/consultas", estaLogado, (req, res) => demandaConsultaController.listaDemandas(req, res))
-  .post("/admin/demandas/consultas", estaLogado, upload.single("file"), (req, res) => demandaConsultaController.atualizaDemandas(req, res))
+  .get("/demandas/consultas", estaLogado, (req, res, next) => demandaConsultaController.listaDemandas(req, res, next))
+  .post("/admin/demandas/consultas", estaLogado, upload.single("file"), (req, res, next) => demandaConsultaController.atualizaDemandas(req, res, next))
 
-  .get("/demandas/exames", estaLogado, (req, res) => demandaExameController.listaDemandas(req, res))
-  .post("/admin/demandas/exames", estaLogado, upload.single("file"), (req, res) => demandaExameController.atualizaDemandas(req, res))
+  .get("/demandas/exames", estaLogado, (req, res, next) => demandaExameController.listaDemandas(req, res, next))
+  .post("/admin/demandas/exames", estaLogado, upload.single("file"), (req, res, next) => demandaExameController.atualizaDemandas(req, res, next))
 
   .post("/admin/demandas/agendamentos", estaLogado, upload.single("file"), DemandaAgendadosController.atualizaAgendamentos )
 
-  .get("/demandas/consultas/:idRecurso/:ano", estaLogado, (req, res) => demandaConsultaController.mostraDetalhesDemanda(req, res))
-  .get("/demandas/exames/:idRecurso/:ano", estaLogado, (req, res) => demandaExameController.mostraDetalhesDemanda(req, res))
+  .get("/demandas/consultas/:idRecurso/:ano", estaLogado, (req, res, next) => demandaConsultaController.mostraDetalhesDemanda(req, res, next))
+  .get("/demandas/consultas/:ano", estaLogado, (req, res, next) => demandaConsultaController.mostraGraficoTotalDemandasAno(req, res, next))
+
+  .get("/demandas/exames/:idRecurso/:ano", estaLogado, (req, res, next) => demandaExameController.mostraDetalhesDemanda(req, res, next))
+  .get("/demandas/exames/:ano", estaLogado, (req, res, next) => demandaExameController.mostraGraficoTotalDemandasAno(req, res, next))
+
   .get("/demandas/recursos_internos/:idRecurso/:ano", estaLogado, RecursoInternoController.mostraDetalhesRecursoInterno)
 
   .get("/demandas/recursos_internos", estaLogado, RecursoInternoController.listaRecursosInternos )

@@ -22,7 +22,7 @@ form.addEventListener("submit", (event) => {
     .then(data => {
       //se retornou login = true
       if(data.logado) {
-        window.location.href = "/demandas/consultas";
+        window.location.href = "/inicio";
       } else {
         //se deu erro mostra mensagem de erro na tela de login
         document.getElementById("p-erro").innerHTML = data.mensagem;

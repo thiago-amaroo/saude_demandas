@@ -8,7 +8,7 @@ class DemandaGenericController {
     this.nomeDemanda = nomeDemanda; //armazena o texto do nome da demanda (demandas_consultas ou demandas_exames) p/ redirecionar para  view, ou mostrar nome do bd atualizado
   }
  
-  async atualizaDemandas(req, res)  {
+  async atualizaDemandas(req, res, next)  {
     //deletando todos os documentos da colecao no mongodb atlas
     // try { 
     //   await this.modeloDemanda.deleteMany({});
@@ -32,7 +32,11 @@ class DemandaGenericController {
       //esse array tira os \r da string e divide a string de texto na quebra de linha
       //Primeira linha: ano. Segunda linha: mes
       //Ex: saida:  [2024, 'janeiro', 'acupuntura;2','alergologia;6']
-      const array1 =  await lerArquivo(req, res);
+      const array1 =  await lerArquivo();
+      //se retornou erro da funcao lerArquivo array1 = objeto erro e array1.code tem codigo do erro
+      if(array1.code) {
+        next(array1);
+      }
 
       const ano = array1[0].trim().replaceAll(";","");
       const mes = array1[1].trim().replaceAll(";","");
@@ -131,22 +135,24 @@ class DemandaGenericController {
           } 
         }
       }
+    
+      res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: `Banco de dados ${this.nomeDemanda} atualizado com sucesso.`, role: req.role, usuario: req.usuario } );
       
     } catch(erro) {
       console.log(erro);
-      res.status(500).render("areaAdmin", { bdAtualizado: false, mensagem: `Erro ao atualizar o banco de dados ${this.nomeDemanda}.`, role: req.role, usuario: req.usuario } );
+      erro.localDoErro = "admin";
+      erro.mensagem = `Erro ao atualizar o banco de dados ${this.nomeDemanda}: "${erro}"`;
+      next(erro);
     }
     //console.log(arrayNomes);
     //console.log(arrayNomesArquivo);
     //console.log(nomeExisteBdENaoNoArquivo);
-  
-    res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: `Banco de dados ${this.nomeDemanda} atualizado com sucesso.`, role: req.role, usuario: req.usuario } );
-      
+        
   };
 
   
 
-  async listaDemandas (req, res) {
+  async listaDemandas (req, res, next) {
     //definindo se nome do campo do bd será especialidade(consultas) ou exame (exames)
     let nomeRecurso = "";
     if(this.nomeDemanda === "demandas_consultas") {  nomeRecurso = "especialidade"; }
@@ -193,10 +199,14 @@ class DemandaGenericController {
 
       };
 
+      console.log(demandasFinal);
       res.status(200).render(`${this.nomeDemanda}`, { demandas: demandasFinal, somaPacientesDemanda: somaPacientesDemanda, somaPacientesAgendados: somaPacientesAgendados, role: req.role, usuario: req.usuario });
 
     } catch(erro) {
       console.log(erro);
+      erro.localDoErro = this.nomeDemanda;
+      erro.mensagem = `Erro ao carregar a pagina "${this.nomeDemanda}": "${erro}"`;
+      next(erro);
     }
   };
 
@@ -226,7 +236,7 @@ class DemandaGenericController {
       const arrayMesesPorcentagem = arrayMeses.map((elemento) => {
         if( elemento[1] > 0 ) {
           const porcentagem = (elemento[1] * 100) / maiorValorPacienteMes;
-          elemento.push(porcentagem);
+          elemento.push(porcentagem.toFixed(2));
           return elemento;
         } else {
           elemento.push(0);
@@ -234,13 +244,17 @@ class DemandaGenericController {
         }
       });
 
+      //array de anos para poder escolher qual ano mostrar grafico
+      const arrayAnos = demandaResultado.pacientes.map((elemento) => elemento.ano );
+ 
       console.log(arrayMesesPorcentagem);
 
       const demandaResultadoFinal = {
         recurso: demandaResultado[nomeRecurso],
         meses: arrayMesesPorcentagem,
         maiorValorPaciente: maiorValorPacienteMes,
-        ano: ano
+        ano: ano,
+        todosAnos: arrayAnos
       };
 
       res.status(200).json(demandaResultadoFinal);
@@ -251,6 +265,97 @@ class DemandaGenericController {
   }
 
 
+
+  async mostraGraficoTotalDemandasAno(req, res) {
+    
+    const ano = req.params.ano;
+
+    const meses = {
+      0: "janeiro",
+      1: "fevereiro",
+      2: "marco",
+      3: "abril",
+      4: "maio",
+      5: "junho",
+      6: "julho",
+      7: "agosto",
+      8: "setembro",
+      9: "outubro",
+      10: "novembro",
+      11: "dezembro"
+    };
+
+    try {
+      
+      const recursos = await this.modeloDemanda.find( {} );
+
+      // [ [janeiro, 500], [fevereiro, 600] ] total de demandas do mes
+      const arrayResultados = [];
+
+      //for dos meses. Executara 12 vezes uma para cada mes percorrendo todas as especialidades e somando valor do mes de cada uma
+      for(let i = 0; i < 11; i++ ) {
+        let somaDoMes = 0; //ex: soma de janeiro de todos recursos
+
+        for(let j = 0; j < recursos.length; j++) {
+          const objetoAno = recursos[j].pacientes.find((elemento) => elemento.ano === ano);
+          if(objetoAno) {
+            somaDoMes += objetoAno[meses[i]]; 
+          }
+        } //for especialidades
+        
+        const arrayResultadoMes = [ meses[i], somaDoMes ];
+        arrayResultados.push( arrayResultadoMes );
+
+      }//for do mes
+
+      console.log(arrayResultados);
+
+      //pegando o maior valor de pacientes dos meses do ano para usar no calculo de porcentagem do grafico
+      function compareFn(a, b) {
+        return b - a;
+      }
+      const maiorValor = arrayResultados.map((elemento) => elemento[1]).sort(compareFn)[0];
+       
+      //colocando no array meses a largura que a barra do grafico tera em cada mes. Sera o terceiro elemento. Ex: [ [janeiro, 500, 60 ]]
+      const arrayMesesPorcentagem = arrayResultados.map((elemento) => {
+        if( elemento[1] > 0 ) {
+          const porcentagem = (elemento[1] * 100) / maiorValor;
+          elemento.push(porcentagem.toFixed(2));
+          return elemento;
+        } else {
+          elemento.push(0);
+          return elemento;
+        }
+      });
+
+
+      //array de anos para poder escolher qual ano mostrar grafico. Busco todos os anos dos recursos, pego ano em array e removo duplicados
+      const arrayAnos = [];
+      for(let i = 0; i < recursos.length; i++) {
+        const objetoAno = recursos[i].pacientes.find((elemento) => elemento.ano === ano);
+        if(objetoAno) {
+          arrayAnos.push(objetoAno.ano); 
+        }
+      }
+      //removendo anos repetidos
+      const arrayAnosNaoRepetidos = [...new Set(arrayAnos)];
+
+      const demandaResultadoFinal = {
+        meses: arrayMesesPorcentagem,
+        maiorValorPaciente: maiorValor,
+        ano: ano,
+        todosAnos: arrayAnosNaoRepetidos
+      };
+
+      res.status(200).json(demandaResultadoFinal);
+
+
+    } catch(erro) {
+      console.log(erro);
+    }
+
+
+  }
 
 }
 

@@ -5,6 +5,7 @@ import estaLogado from "../middlewares/estaLogado.js";
 const router = express.Router();
 
 router
+  .get("/inicio", estaLogado, UserController.mostraInicio)
   .get("/login", estaLogado, UserController.mostrarLogin) //chama estaLogado para verificar se ja esta logado e redirecionar
   .post("/login", UserController.fazerLogin)
   //.get("/users", UserController.listaUsers)

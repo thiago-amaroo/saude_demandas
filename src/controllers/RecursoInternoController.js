@@ -4,7 +4,7 @@ import lerArquivo from "../utils/lerArquivo.js";
 
 class RecursoInternoController {
 
-  static atualizaRecursosInternos = async (req, res) => {
+  static atualizaRecursosInternos = async (req, res, next) => {
     //deletando todos os documentos da colecao no mongodb atlas
     // try { 
     //   await modeloRecursosInternos.deleteMany({});
@@ -15,40 +15,43 @@ class RecursoInternoController {
 
     //Pegando nomes do recurso interno do bd e pondo em um array para checar se ja existe. Se nao existe cria, se existe, vai atualizar o mes
     let arrayNomes =[];
+   
     try {
+
       const consultaNomes = await modeloRecursosInternos.find({}, "recurso" );
       consultaNomes.forEach((elemento) => arrayNomes.push( elemento["recurso"] ) );
 
-    } catch(erro) {
-      console.log(erro);
-    }
     
-    //lendo o arquivo que foi feito o upload no midleware anterior a chamada do controlador
-    //esse array tira os \r da string e divide a string de texto na quebra de linha
-    //Primeira linha: ano. Segunda linha: mes
-    //Ex: saida:  [2024, 'janeiro', 'raio-x;0;30','psicologia;25;30']
-    const array1 = await lerArquivo(req, res);
+      //lendo o arquivo que foi feito o upload no midleware anterior a chamada do controlador
+      //esse array tira os \r da string e divide a string de texto na quebra de linha
+      //Primeira linha: ano. Segunda linha: mes
+      //Ex: saida:  [2024, 'janeiro', 'raio-x;0;30','psicologia;25;30']
+      const array1 = await lerArquivo();
+      //se retornou erro da funcao lerArquivo array1 = objeto erro e array1.code tem codigo do erro
+      if(array1.code) {
+        next(array1);
+      }
 
-    const ano = array1[0].trim().replaceAll(";","");
-    const mes = array1[1].trim().replaceAll(";","");
+      const ano = array1[0].trim().replaceAll(";","");
+      const mes = array1[1].trim().replaceAll(";","");
    
-    //esse array percorre o array de string. Comeca no indice 2 pq indice 0 = ano e indice 1 = mes (as duas primeiras linhas do arquivo)
-    for(let i = 2; i < array1.length; i++) {
-      const arrayInternoDividido = array1[i].split(";"); //Ex: saida:  [  ['raio-x', '0', '30']  ]
+      //esse array percorre o array de string. Comeca no indice 2 pq indice 0 = ano e indice 1 = mes (as duas primeiras linhas do arquivo)
+      for(let i = 2; i < array1.length; i++) {
+        const arrayInternoDividido = array1[i].split(";"); //Ex: saida:  [  ['raio-x', '0', '30']  ]
             
-      //Se nome do recurso nao existe no bd, precisa criar o recurso com o ano com todos os meses zerados e apenas mes atual com valor
-      if(!arrayNomes.includes(arrayInternoDividido[0])) {
-        const arrayObjetosInterno = { 
-          recurso: arrayInternoDividido[0],
-          pacientes: { 
-            ano: ano,  
-            [mes]: {
-              demanda: arrayInternoDividido[1],
-              atendidos: arrayInternoDividido[2]
+        //Se nome do recurso nao existe no bd, precisa criar o recurso com o ano com todos os meses zerados e apenas mes atual com valor
+        if(!arrayNomes.includes(arrayInternoDividido[0])) {
+          const arrayObjetosInterno = { 
+            recurso: arrayInternoDividido[0],
+            pacientes: { 
+              ano: ano,  
+              [mes]: {
+                demanda: arrayInternoDividido[1],
+                atendidos: arrayInternoDividido[2]
+              }
             }
-          }
-        };
-        try {
+          };
+        
           let demanda = new modeloRecursosInternos(arrayObjetosInterno);
           await demanda.save(); 
 
@@ -56,13 +59,9 @@ class RecursoInternoController {
           console.log(mes);
           console.log(arrayObjetosInterno);
         
-        } catch(errobd) {
-          console.log(errobd);
-          res.status(200).render("areaAdmin", { bdAtualizado: false, mensagem: "Erro ao atualizar o banco de dados\"Recursos Internos\".", role: req.role, usuario: req.usuario } );
-
-        }
-      } else { //se recurso ja existe no bd, verificar se ja existe o ano criado no recurso
-        try {
+       
+        } else { //se recurso ja existe no bd, verificar se ja existe o ano criado no recurso
+        
           const recurso = await modeloRecursosInternos.findOne( { recurso: arrayInternoDividido[0] } );
           //Se ano nao existe, incluir:
           //pegando dados existentes no objeto ano do array pacientes. Ex: anoObjeto = { ano: '2023', outubro: '10' } }
@@ -92,20 +91,20 @@ class RecursoInternoController {
             console.log(recurso);
             await recurso.save();
           }
-        } catch(erro) {
-          console.log(erro);
-          res.status(200).render("areaAdmin", { bdAtualizado: false, mensagem: "Erro ao atualizar o banco de dados\"Recursos Internos\".", role: req.role, usuario: req.usuario } );
         }
       }
+
+      res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: "Banco de dados \"Recursos Internos\" atualizado com sucesso.", role: req.role, usuario: req.usuario } );
+
+    } catch(erro) {
+      erro.localDoErro = "admin";
+      erro.mensagem = `Erro ao atualizar o banco de dados "recursos_internos": "${erro}"`;
+      next(erro);
     }
-
-  
-    res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: "Banco de dados \"Recursos Internos\" atualizado com sucesso.", role: req.role, usuario: req.usuario } );
-
   };
+  
 
-
-  static listaRecursosInternos = async ( req, res ) => {
+  static listaRecursosInternos = async ( req, res, next ) => {
 
     const dataAtual = new Date();
     const mesAtual = dataAtual.getMonth(); //retorna numero de 0 a 11. Janeiro = 0
@@ -120,7 +119,6 @@ class RecursoInternoController {
     try {
       //busca todos os recursos, pegando apenas os campos
       const demandasRecursosInternos = await modeloRecursosInternos.find( {} ).sort( { recurso: 1 } );
-      console.log(demandasRecursosInternos);
 
       for (let i = 0; i < demandasRecursosInternos.length; i++ ) {
 
@@ -140,12 +138,14 @@ class RecursoInternoController {
         demandasRecursosInternosFinal.push(objeto);
       };
 
-      console.log(demandasRecursosInternosFinal);
 
       res.status(200).render("demandas_recursos_internos", { demandasRecursosInternos: demandasRecursosInternosFinal, somaPacientesDemanda: somaPacientesDemanda, somaPacientesAtendidos: somaPacientesAtendidos, role: req.role, usuario: req.usuario });
 
     } catch(erro) {
       console.log(erro);
+      erro.localDoErro = "recursos_internos";
+      erro.mensagem = `Erro ao carregar a pagina "recursos_internos": "${erro}"`;
+      next(erro);
     }
   };
 
@@ -195,13 +195,15 @@ class RecursoInternoController {
         }
       });
 
-      console.log(arrayMesesPorcentagem);
-
+      //array de anos para poder escolher qual ano mostrar grafico
+      const arrayAnos = demandaRecursoInternoResultado.pacientes.map((elemento) => elemento.ano );
+ 
       const demandaRecursoInternoFinal = {
         recurso: demandaRecursoInternoResultado["recurso"],
         meses: arrayMesesPorcentagem,
         //maiorValorPaciente: maiorValorAtendimentoMes,
-        ano: ano
+        ano: ano,
+        todosAnos: arrayAnos
       };
 
       res.status(200).json(demandaRecursoInternoFinal);

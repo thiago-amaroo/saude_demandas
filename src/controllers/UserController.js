@@ -5,6 +5,10 @@ import gerarJwt from "../utils/gerarJwt.js";
 
 class LoginController {
 
+  static mostraInicio = (req, res) => {
+    res.status(200).render("inicio", { role: req.role, usuario: req.usuario } );
+  };
+
   static mostrarLogin = (req, res) => {
     //checar se usuario ja esta logado e possui o cookie com o token:
     //middleware estaLogado.js coloca propriedade logado = true na requisicao
