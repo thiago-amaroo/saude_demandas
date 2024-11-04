@@ -144,7 +144,17 @@ function mostraGraficoAnual(ano) {
     .then(data => {
       console.log(data);
 
-      document.querySelector("#ModalGraficoAnualLabel").innerHTML = `Demandas do Ano: ${data.ano}`;
+      let cabecalho = "";
+      cabecalho += `Ano ${data.ano} -`;
+      if(recurso === "recursos_internos") {
+        cabecalho += " Atendimentos - Recursos Internos";
+      } else if (recurso === "consultas") {
+        cabecalho += " Demandas - Consultas";
+      } else {
+        cabecalho += " Demandas - Exames";
+      }
+
+      document.querySelector("#ModalGraficoAnualLabel").innerHTML = cabecalho;
       let html = "";
       html += "<select id=\"troca-ano\">";
 

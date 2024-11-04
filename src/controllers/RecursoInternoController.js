@@ -214,6 +214,101 @@ class RecursoInternoController {
 
   };
 
+
+
+
+  static mostraGraficoTotalRecursosInternosAno = async (req, res) => {
+    
+    const ano = req.params.ano;
+
+    const meses = {
+      0: "janeiro",
+      1: "fevereiro",
+      2: "marco",
+      3: "abril",
+      4: "maio",
+      5: "junho",
+      6: "julho",
+      7: "agosto",
+      8: "setembro",
+      9: "outubro",
+      10: "novembro",
+      11: "dezembro"
+    };
+
+    try {
+      
+      const recursos = await modeloRecursosInternos.find( {} );
+
+      // [ [janeiro, 500], [fevereiro, 600] ] total de demandas do mes
+      const arrayResultados = [];
+
+      //for dos meses. Executara 12 vezes uma para cada mes percorrendo todos os recursos e somando valor do mes de cada uma
+      for(let i = 0; i < 11; i++ ) {
+        let somaDoMes = 0; //ex: soma de janeiro de todos recursos
+
+        for(let j = 0; j < recursos.length; j++) {
+          const objetoAno = recursos[j].pacientes.find((elemento) => elemento.ano === ano);
+          if(objetoAno) {
+            somaDoMes += objetoAno[meses[i]].atendidos; 
+          }
+        } //for especialidades
+        
+        const arrayResultadoMes = [ meses[i], somaDoMes ];
+        arrayResultados.push( arrayResultadoMes );
+
+      }//for do mes
+
+      console.log(arrayResultados);
+
+      //pegando o maior valor de pacientes dos meses do ano para usar no calculo de porcentagem do grafico
+      function compareFn(a, b) {
+        return b - a;
+      }
+      const maiorValor = arrayResultados.map((elemento) => elemento[1]).sort(compareFn)[0];
+       
+      //colocando no array meses a largura que a barra do grafico tera em cada mes. Sera o terceiro elemento. Ex: [ [janeiro, 500, 60 ]]
+      const arrayMesesPorcentagem = arrayResultados.map((elemento) => {
+        if( elemento[1] > 0 ) {
+          const porcentagem = (elemento[1] * 100) / maiorValor;
+          elemento.push(porcentagem.toFixed(2));
+          return elemento;
+        } else {
+          elemento.push(0);
+          return elemento;
+        }
+      });
+
+
+      //array de anos para poder escolher qual ano mostrar grafico. Busco todos os anos dos recursos, pego ano em array e removo duplicados
+      const arrayAnos = [];
+      for(let i = 0; i < recursos.length; i++) {
+        const objetoAno = recursos[i].pacientes.find((elemento) => elemento.ano === ano);
+        if(objetoAno) {
+          arrayAnos.push(objetoAno.ano); 
+        }
+      }
+      //removendo anos repetidos
+      const arrayAnosNaoRepetidos = [...new Set(arrayAnos)];
+
+      const demandaResultadoFinal = {
+        meses: arrayMesesPorcentagem,
+        maiorValorPaciente: maiorValor,
+        ano: ano,
+        todosAnos: arrayAnosNaoRepetidos
+      };
+
+      res.status(200).json(demandaResultadoFinal);
+
+
+    } catch(erro) {
+      console.log(erro);
+    }
+
+
+  };
+
+
 }
 
 export default RecursoInternoController;

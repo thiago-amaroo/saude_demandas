@@ -27,6 +27,7 @@ router
   .get("/demandas/exames/:ano", estaLogado, (req, res, next) => demandaExameController.mostraGraficoTotalDemandasAno(req, res, next))
 
   .get("/demandas/recursos_internos/:idRecurso/:ano", estaLogado, RecursoInternoController.mostraDetalhesRecursoInterno)
+  .get("/demandas/recursos_internos/:ano", estaLogado,  RecursoInternoController.mostraGraficoTotalRecursosInternosAno)
 
   .get("/demandas/recursos_internos", estaLogado, RecursoInternoController.listaRecursosInternos )
   .post("/admin/demandas/recursos_internos", estaLogado, upload.single("file"), RecursoInternoController.atualizaRecursosInternos );

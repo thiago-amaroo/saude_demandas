@@ -27,8 +27,8 @@ class DemandaAgendadosController {
         const arrayObjetos = array1.map(( elemento ) => {
           const arrayInternoDividido = elemento.split(";"); //Ex: saida:  [  ['raio-x', 'data do agendamento]  ]
           const arrayObjetosInterno = { 
-            recurso: arrayInternoDividido[0],
-            data: arrayInternoDividido[1]
+            recurso: arrayInternoDividido[0].trim(),
+            data: arrayInternoDividido[1].trim()
           };
           return arrayObjetosInterno;
         } );

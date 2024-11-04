@@ -29,8 +29,8 @@
     }],
     "start_url": "/login",
     "display": "standalone",
-    "background_color": "#f8931d",
-    "theme_color": "#f8931d",
+    "background_color": "#22b14c",
+    "theme_color": "#22b14c",
 
     "prefer_related_applications": false
    

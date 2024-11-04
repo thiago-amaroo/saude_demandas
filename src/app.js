@@ -6,6 +6,7 @@ import url from "url";
 import path from "path";
 
 
+
 db.on("error", console.log.bind(console, "Erro de conexão"));
 db.once("open", () => {
   console.log("Conexao com BD feita com sucesso");

@@ -44,19 +44,20 @@ class DemandaGenericController {
       const arrayNomesArquivo = [];
   
       //esse array percorre o array de string. Comeca no indice 2 pq indice 0 = ano e indice 1 = mes (as duas primeiras linhas do arquivo)
-      for(let i = 2; i < array1.length; i++) {
-        const arrayInternoDividido = array1[i].split(";"); //Ex: saida:  [  ['acupuntura', '2']  ]
-            
+      //Ex: array1 = ['acumputura;2', 'alergologia;3'] 
+      for(let i = 2; i < array1.length; i++) { 
+        const arrayInternoDividido = array1[i].split(";"); //Ex: arrayInternoDividido = ['acupuntura', '2']. 
+           
         //Se nome do recurso ja esta no BD, porem nao esta no arquivo, significa que saiu da demanda. Preciso zerar o numero de pacientes do mes do arquivo
         //Se sai da demanda no mes seguinte, nao tem problema, pq vai estar zerado e listaDemandas só lista os recursos maior que 0
         //Mas se sai no mesmo mes, recurso nao vai estar no arquivo e preciso zerar o mes no bd. Colocando todos recursos do arquivo em um array
-        arrayNomesArquivo.push(arrayInternoDividido[0]);
+        arrayNomesArquivo.push(arrayInternoDividido[0].trim());
 
         //Se nome do recurso nao existe no bd, precisa o recurso com o ano com todos os meses zerados e apenas mes atual com valor
         if(!arrayNomes.includes(arrayInternoDividido[0])) {
 
           const arrayObjetosInterno = { 
-            [campoDemanda]: arrayInternoDividido[0],
+            [campoDemanda]: arrayInternoDividido[0].trim(),
             pacientes: { 
               ano: ano,  
               [mes]: arrayInternoDividido[1]
@@ -83,11 +84,11 @@ class DemandaGenericController {
               [mes]: arrayInternoDividido[1]
             };
               //inserir objetoAtualizado no array pacientes 
-            await this.modeloDemanda.updateOne( { [campoDemanda]: arrayInternoDividido[0] }, { $push: { pacientes: objetoAtualizado } });
+            await this.modeloDemanda.updateOne( { [campoDemanda]: arrayInternoDividido[0].trim() }, { $push: { pacientes: objetoAtualizado } });
                   
           } else {
             //Se ja tem nome do recurso e ja tem o ano a ser atualizado no bd, adiciona ou atualiza o mes solicitado no arquivo
-            const recurso = await this.modeloDemanda.findOne( { [campoDemanda]: arrayInternoDividido[0] } );
+            const recurso = await this.modeloDemanda.findOne( { [campoDemanda]: arrayInternoDividido[0].trim() } );
             let item = recurso.pacientes.find((elemento) => elemento.ano === ano); 
             item[mes] = arrayInternoDividido[1];
             //aviso ao mongoose qual campo foi altera. Se nao tiver um schema estruturado, preciso fazer isso pq mongoose usa setters do schema para saber qual campo foi modificado
@@ -171,7 +172,7 @@ class DemandaGenericController {
     try {
       //busca todos os recursos, pegando apenas os campos
       const demandasResultado = await this.modeloDemanda.find( {} ).sort( { [nomeRecurso]: 1 } );
-      //console.log(demandasResultado);
+      console.log(demandasResultado);
 
       for (let i = 0; i < demandasResultado.length; i++ ) {
 
@@ -188,18 +189,18 @@ class DemandaGenericController {
             qtde_pacientes: buscaAno[mesAtualExtenso],
           };
 
-
           //Inserindo quantidade de pacientes agendados do mes
-          const agendados = await modeloAgendamentos.find( { recurso: demandasResultado[i][nomeRecurso]  } ).countDocuments();
+          const agendados = await modeloAgendamentos.find( { recurso: demandasResultado[i][nomeRecurso].trim()  } ).countDocuments();
           somaPacientesAgendados += agendados;
 
+          console.log( `${demandasResultado[i][nomeRecurso]}: ${agendados} `);
           objeto.agendado = agendados;
           demandasFinal.push(objeto);
         }
 
       };
 
-      console.log(demandasFinal);
+      //console.log(demandasFinal);
       res.status(200).render(`${this.nomeDemanda}`, { demandas: demandasFinal, somaPacientesDemanda: somaPacientesDemanda, somaPacientesAgendados: somaPacientesAgendados, role: req.role, usuario: req.usuario });
 
     } catch(erro) {
