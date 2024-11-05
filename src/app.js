@@ -4,6 +4,7 @@ import db from "./config/dbConnect.js";
 import routes from "./routes/index.js";
 import url from "url";
 import path from "path";
+import manipuladorDeErros from "./middlewares/manipuladorDeErros.js";
 
 
 
@@ -27,6 +28,8 @@ app.use(express.static(diretorioPublico));
 
 
 routes(app);
+
+app.use(manipuladorDeErros);
 
 
 

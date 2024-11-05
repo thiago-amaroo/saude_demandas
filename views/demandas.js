@@ -49,7 +49,7 @@ function mostraDetalhes(idRecurso, ano) {
       }
       document.querySelector("#ModalDetalhesLabel").innerHTML = cabecalho;
       let html ="";
-      html += "<select id=\"troca-ano\">";
+      html += "<select id=\"troca-ano-detalhes\">";
 
       for(let i = 0; i < data.todosAnos.length; i++) {
         html += `<option value=${data.todosAnos[i]} data-ano=${data.todosAnos[i]}> ${data.todosAnos[i]} </option> `;
@@ -82,7 +82,7 @@ function mostraDetalhes(idRecurso, ano) {
 
       //adicionando atributo selected ao ano escolhido
       //O seu select:
-      const selectedoption = document.getElementById("troca-ano");
+      const selectedoption = document.getElementById("troca-ano-detalhes");
       //As opções do seu select. Isto aqui é uma coleção:
       const options = selectedoption.options;
       console.log(options);
@@ -93,11 +93,11 @@ function mostraDetalhes(idRecurso, ano) {
       }
 
       //Funcao para chamar mostraDetalhes e atualizar ano de acordo com escolhido no select
-      const trocaAno = document.getElementById("troca-ano");
+      const trocaAno = document.getElementById("troca-ano-detalhes");
       trocaAno.addEventListener("change", function () {
         const selecionada = this.options[this.selectedIndex];
-        const ano = selecionada.getAttribute("data-ano");
-        if (ano) mostraDetalhes(idRecurso, ano);
+        const anoSelecionado = selecionada.getAttribute("data-ano");
+        if (anoSelecionado) mostraDetalhes(idRecurso, anoSelecionado);
       });
 
     })
@@ -156,7 +156,7 @@ function mostraGraficoAnual(ano) {
 
       document.querySelector("#ModalGraficoAnualLabel").innerHTML = cabecalho;
       let html = "";
-      html += "<select id=\"troca-ano\">";
+      html += "<select id=\"troca-ano-detalhes-anual\">";
 
       for(let i = 0; i < data.todosAnos.length; i++) {
         html += `<option value=${data.todosAnos[i]} data-ano=${data.todosAnos[i]}> ${data.todosAnos[i]} </option> `;
@@ -190,7 +190,7 @@ function mostraGraficoAnual(ano) {
 
       //adicionando atributo selected ao ano escolhido
       //O seu select:
-      const selectedoption = document.getElementById("troca-ano");
+      const selectedoption = document.getElementById("troca-ano-detalhes-anual");
       //As opções do seu select. Isto aqui é uma coleção:
       const options = selectedoption.options;
       console.log(options);
@@ -201,12 +201,20 @@ function mostraGraficoAnual(ano) {
       }
 
       //Funcao para chamar mostraDetalhes e atualizar ano de acordo com escolhido no select
-      const trocaAno = document.getElementById("troca-ano");
+      const trocaAno = document.getElementById("troca-ano-detalhes-anual");
       trocaAno.addEventListener("change", function () {
         const selecionada = this.options[this.selectedIndex];
-        const ano = selecionada.getAttribute("data-ano");
-        if (ano) mostraGraficoAnual(ano);
+        const anoSelecionado = selecionada.getAttribute("data-ano");
+        if (anoSelecionado) mostraGraficoAnual(anoSelecionado);
       });
     })
     .catch(error => console.log(error));
 }
+
+// const anoSelecionado = selecionada.getAttribute("data-ano");
+// if (anoSelecionado) mostraGraficoAnual(anoSelecionado);
+// mudei para nao repetir variavel ano que funcao recebe como parametro
+
+//era 
+// const ano = selecionada.getAttribute("data-ano");
+// if (ano) mostraGraficoAnual(ano);

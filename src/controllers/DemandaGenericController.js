@@ -51,13 +51,13 @@ class DemandaGenericController {
         //Se nome do recurso ja esta no BD, porem nao esta no arquivo, significa que saiu da demanda. Preciso zerar o numero de pacientes do mes do arquivo
         //Se sai da demanda no mes seguinte, nao tem problema, pq vai estar zerado e listaDemandas só lista os recursos maior que 0
         //Mas se sai no mesmo mes, recurso nao vai estar no arquivo e preciso zerar o mes no bd. Colocando todos recursos do arquivo em um array
-        arrayNomesArquivo.push(arrayInternoDividido[0].trim());
+        arrayNomesArquivo.push(arrayInternoDividido[0]);
 
         //Se nome do recurso nao existe no bd, precisa o recurso com o ano com todos os meses zerados e apenas mes atual com valor
         if(!arrayNomes.includes(arrayInternoDividido[0])) {
 
           const arrayObjetosInterno = { 
-            [campoDemanda]: arrayInternoDividido[0].trim(),
+            [campoDemanda]: arrayInternoDividido[0],
             pacientes: { 
               ano: ano,  
               [mes]: arrayInternoDividido[1]
@@ -88,7 +88,7 @@ class DemandaGenericController {
                   
           } else {
             //Se ja tem nome do recurso e ja tem o ano a ser atualizado no bd, adiciona ou atualiza o mes solicitado no arquivo
-            const recurso = await this.modeloDemanda.findOne( { [campoDemanda]: arrayInternoDividido[0].trim() } );
+            const recurso = await this.modeloDemanda.findOne( { [campoDemanda]: arrayInternoDividido[0] } );
             let item = recurso.pacientes.find((elemento) => elemento.ano === ano); 
             item[mes] = arrayInternoDividido[1];
             //aviso ao mongoose qual campo foi altera. Se nao tiver um schema estruturado, preciso fazer isso pq mongoose usa setters do schema para saber qual campo foi modificado

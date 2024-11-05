@@ -7,7 +7,8 @@ const FILES_TO_CACHE = [
   "imgs/barra.png",
   "imgs/brasao.png",
   "imgs/praca-menor.jpg",
-  //"icons/favicon.ico",
+  "imgs/slogan.png",
+  "icons/favicon.ico",
   "icons/152.png",
   
   // "imgs/offline.png",
