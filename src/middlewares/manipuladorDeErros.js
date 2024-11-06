@@ -20,8 +20,3 @@ function manipuladorDeErros (erro, req, res, next)  {
 };
 
 export default manipuladorDeErros;
-
-//res.status(200).render("areaAdmin", { bdAtualizado: true, mensagem: "Banco de dados \"Recursos Internos\" atualizado com sucesso.", role: req.role, usuario: req.usuario } );
-// erro.localDoErro = "admin";
-//       erro.mensagem = `Erro ao atualizar o banco de dados "recursos_internos": "${erro}"`;
-//       next(erro); 
