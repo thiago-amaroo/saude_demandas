@@ -14,19 +14,20 @@
 
     <table class="table table-striped table-hover" >
         <tr> 
-            <td>
+            <td width="40%">
                 <strong> Recurso </strong> 
             </td>
-            <td style="text-align: center;">
+            <td width="30%" style="text-align: center;">
                 <strong>  Demanda </strong>
             </td>
-            <td style="text-align: center;">
+            <td width="30%" style="text-align: center;">
                 <strong>  Atendimentos <br>no mês atual </strong>
             </td>
         </tr>
-        
-        <% for(var i=0; i < demandasRecursosInternos.length; i++) {%>
 
+
+        <% for(let i=0; i < demandasRecursosInternos.length; i++) {%>
+          <% if( !demandasRecursosInternos[i].recurso.includes("prevenção") ) { %>
             <tr id="<%= demandasRecursosInternos[i]._id %>" class="botao" style="cursor: pointer">
 
                 <td> <%= demandasRecursosInternos[i].recurso %>  </td>
@@ -35,15 +36,70 @@
 
                 <td style="text-align: center;"> <%= demandasRecursosInternos[i].atendidos %> </td> 
             </tr>
+
+          <% } %>
         <% } %>
-            
+
+        <tr>
+
+          <td> <b> Total: </b></td>
+      
+          <td style="text-align: center;"> <b> <%= somaPacientesDemandaSemPrevencao %> </b> </td> 
+
+          <td style="text-align: center;"> <b> <%= somaPacientesAtendidosSemPrevencao %> </b> </td> 
+      </tr>
+
+    </table>
+    <br> 
+
+    <table class="table table-striped table-hover" >
+      <tr> 
+          <td width="40%">
+              <strong> Recurso - Prevenção  </strong> 
+          </td>
+          <td width="30%" style="text-align: center;">
+              <strong>  Demanda </strong>
+          </td>
+          <td  width="30%" style="text-align: center;">
+              <strong>  Atendimentos <br>no mês atual </strong>
+          </td>
+      </tr>
+
+     
+      <% for(var i=0; i < demandasRecursosInternos.length; i++) {%>
+        <% if( demandasRecursosInternos[i].recurso.includes("prevenção") ) { %>
+          <tr id="<%= demandasRecursosInternos[i]._id %>" class="botao" style="cursor: pointer">
+
+              <td> <%= demandasRecursosInternos[i].recurso %>  </td>
+          
+              <td style="text-align: center;"> <%= demandasRecursosInternos[i].demanda %> </td> 
+
+              <td style="text-align: center;"> <%= demandasRecursosInternos[i].atendidos %> </td> 
+          </tr>
+        
+        <% } %>
+      <% } %>
+
+      <tr>
+
+        <td> <b> Total Prevenção: </b></td>
+    
+        <td style="text-align: center;"> <b> <%= somaPacientesDemandaComPrevencao %> </b> </td> 
+
+        <td style="text-align: center;"> <b>  <%= somaPacientesAtendidosComPrevencao %> </b> </td> 
+    </tr>
+
+  </table>
+
+    <table width="100%" > 
             <tr> 
-              <td> <b> Total: </b> </td>
-              <td style="text-align: center;"> <b> <%= somaPacientesDemanda %> </b></td>
-              <td style="text-align: center;"> <b> <%= somaPacientesAtendidos %> </b> </td>
+              <td width="40%" style="padding:10px"> <h5> <b>   Total Geral: </b> </h5></td>
+              <td width="30%" style="text-align: center; padding: 10px;"> <h5> <b> <%= somaPacientesDemandaTotal %> </b> </h5> </td>
+              <td width="30%" style="text-align: center; padding: 10px">  <h5> <b> <%= somaPacientesAtendidosTotal %> </b> </h5> </td>
             </tr>
     </table>
   </main>
+
   
   <!-- Modal para abrir detalhes da especialidade -->
 <div class="modal fade" id="ModalDetalhes" tabindex="-1" aria-labelledby="ModalDetalhesLabel" aria-hidden="true">

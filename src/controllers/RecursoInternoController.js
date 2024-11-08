@@ -113,8 +113,11 @@ class RecursoInternoController {
     const anoAtual = dataAtual.getFullYear().toString();
 
     let demandasRecursosInternosFinal = [];
-    let somaPacientesDemanda = 0;
-    let somaPacientesAtendidos = 0;
+    let somaPacientesDemandaSemPrevencao = 0;
+    let somaPacientesAtendidosSemPrevencao = 0;
+
+    let somaPacientesDemandaComPrevencao = 0;
+    let somaPacientesAtendidosComPrevencao = 0;
 
     try {
       //busca todos os recursos, pegando apenas os campos
@@ -124,9 +127,15 @@ class RecursoInternoController {
 
         const buscaAno = demandasRecursosInternos[i].pacientes.find((elemento2) => elemento2.ano === anoAtual );
 
-        //somando total de demandas:
-        somaPacientesDemanda += buscaAno[mesAtualExtenso]["demanda"];
-        somaPacientesAtendidos += buscaAno[mesAtualExtenso]["atendidos"];
+        //somando total de demandas: Soma com prevencao no nome separado dos que nao tem prevencao no nome
+
+        if( demandasRecursosInternos[i]["recurso"].includes("prevenção") ) {
+          somaPacientesDemandaComPrevencao += buscaAno[mesAtualExtenso]["demanda"];
+          somaPacientesAtendidosComPrevencao += buscaAno[mesAtualExtenso]["atendidos"];
+        } else {
+          somaPacientesDemandaSemPrevencao += buscaAno[mesAtualExtenso]["demanda"];
+          somaPacientesAtendidosSemPrevencao += buscaAno[mesAtualExtenso]["atendidos"];
+        }
 
         const objeto = { 
           _id: demandasRecursosInternos[i]["_id"],
@@ -138,8 +147,21 @@ class RecursoInternoController {
         demandasRecursosInternosFinal.push(objeto);
       };
 
+      //somando totais de com prevencao e de sem prevencao
+      let somaPacientesDemandaTotal = somaPacientesDemandaComPrevencao + somaPacientesDemandaSemPrevencao;
+      let somaPacientesAtendidosTotal = somaPacientesAtendidosComPrevencao +somaPacientesAtendidosSemPrevencao;
 
-      res.status(200).render("demandas_recursos_internos", { demandasRecursosInternos: demandasRecursosInternosFinal, somaPacientesDemanda: somaPacientesDemanda, somaPacientesAtendidos: somaPacientesAtendidos, role: req.role, usuario: req.usuario });
+      res.status(200).render("demandas_recursos_internos", { 
+        demandasRecursosInternos: demandasRecursosInternosFinal, 
+        somaPacientesDemandaComPrevencao: somaPacientesDemandaComPrevencao, 
+        somaPacientesAtendidosComPrevencao: somaPacientesAtendidosComPrevencao, 
+        somaPacientesDemandaSemPrevencao: somaPacientesDemandaSemPrevencao,
+        somaPacientesAtendidosSemPrevencao: somaPacientesAtendidosSemPrevencao,
+        somaPacientesDemandaTotal: somaPacientesDemandaTotal,
+        somaPacientesAtendidosTotal: somaPacientesAtendidosTotal,
+        role: req.role, 
+        usuario: req.usuario 
+      });
 
     } catch(erro) {
       console.log(erro);
