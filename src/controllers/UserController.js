@@ -48,7 +48,7 @@ class LoginController {
             //se tudo deu certo, faz login, cria jwt contendo usuario digitado e a role desse usuario do bd e envia cookie
             const tokenJwt = gerarJwt( {usuario: usuario, role: usuarioBdObjeto.role } );
             console.log(usuarioBdObjeto.role);
-            res.status(200).cookie("tokenJwt", tokenJwt).json( { logado: true, mensagem: "Usuario logado  com sucesso" } );
+            res.status(200).cookie("tokenJwt", tokenJwt, { path: "/", maxAge : 126230400000 } ).json( { logado: true, mensagem: "Usuario logado  com sucesso" } );
           }
         }
       } catch (erro) {
