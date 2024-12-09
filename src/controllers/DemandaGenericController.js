@@ -294,7 +294,7 @@ class DemandaGenericController {
       const arrayResultados = [];
 
       //for dos meses. Executara 12 vezes uma para cada mes percorrendo todas as especialidades e somando valor do mes de cada uma
-      for(let i = 0; i < 11; i++ ) {
+      for(let i = 0; i < 12; i++ ) {
         let somaDoMes = 0; //ex: soma de janeiro de todos recursos
 
         for(let j = 0; j < recursos.length; j++) {
@@ -348,6 +348,7 @@ class DemandaGenericController {
         todosAnos: arrayAnosNaoRepetidos
       };
 
+      console.log(arrayMesesPorcentagem);
       res.status(200).json(demandaResultadoFinal);
 
 
