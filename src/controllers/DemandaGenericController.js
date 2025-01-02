@@ -57,7 +57,7 @@ class DemandaGenericController {
         if(!arrayNomes.includes(arrayInternoDividido[0])) {
 
           const arrayObjetosInterno = { 
-            [campoDemanda]: arrayInternoDividido[0],
+            [campoDemanda]: arrayInternoDividido[0].trim(),
             pacientes: { 
               ano: ano,  
               [mes]: arrayInternoDividido[1]
@@ -172,14 +172,14 @@ class DemandaGenericController {
     try {
       //busca todos os recursos, pegando apenas os campos
       const demandasResultado = await this.modeloDemanda.find( {} ).sort( { [nomeRecurso]: 1 } );
-      console.log(demandasResultado);
+      //console.log(demandasResultado);
 
       for (let i = 0; i < demandasResultado.length; i++ ) {
 
         const buscaAno = demandasResultado[i].pacientes.find((elemento2) => elemento2.ano === anoAtual );
 
         //so adiciona ao objeto se valor de pacientes no mes é > 0. Pq pode ser que recurso nao esta mais no arquivo demanda, mas esta no bd zerado
-        if(buscaAno[mesAtualExtenso] > 0) {
+        if( buscaAno && buscaAno[mesAtualExtenso] > 0 ) {
           //somando total de demandas:
           somaPacientesDemanda += buscaAno[mesAtualExtenso];
 
@@ -193,7 +193,7 @@ class DemandaGenericController {
           const agendados = await modeloAgendamentos.find( { recurso: demandasResultado[i][nomeRecurso].trim()  } ).countDocuments();
           somaPacientesAgendados += agendados;
 
-          console.log( `${demandasResultado[i][nomeRecurso]}: ${agendados} `);
+          //console.log( `${demandasResultado[i][nomeRecurso]}: ${agendados} `);
           objeto.agendado = agendados;
           demandasFinal.push(objeto);
         }
@@ -333,10 +333,9 @@ class DemandaGenericController {
       //array de anos para poder escolher qual ano mostrar grafico. Busco todos os anos dos recursos, pego ano em array e removo duplicados
       const arrayAnos = [];
       for(let i = 0; i < recursos.length; i++) {
-        const objetoAno = recursos[i].pacientes.find((elemento) => elemento.ano === ano);
-        if(objetoAno) {
-          arrayAnos.push(objetoAno.ano); 
-        }
+        const objetoAno = recursos[i].pacientes.map((elemento) => elemento.ano );
+        arrayAnos.push(...objetoAno); 
+        
       }
       //removendo anos repetidos
       const arrayAnosNaoRepetidos = [...new Set(arrayAnos)];
@@ -348,7 +347,7 @@ class DemandaGenericController {
         todosAnos: arrayAnosNaoRepetidos
       };
 
-      console.log(arrayMesesPorcentagem);
+      console.log(demandaResultadoFinal);
       res.status(200).json(demandaResultadoFinal);
 
 

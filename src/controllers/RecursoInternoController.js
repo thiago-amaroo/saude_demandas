@@ -127,24 +127,26 @@ class RecursoInternoController {
 
         const buscaAno = demandasRecursosInternos[i].pacientes.find((elemento2) => elemento2.ano === anoAtual );
 
-        //somando total de demandas: Soma com prevencao no nome separado dos que nao tem prevencao no nome
+        if( buscaAno ) {
+          //somando total de demandas: Soma com prevencao no nome separado dos que nao tem prevencao no nome
 
-        if( demandasRecursosInternos[i]["recurso"].includes("prevenção") ) {
-          somaPacientesDemandaComPrevencao += buscaAno[mesAtualExtenso]["demanda"];
-          somaPacientesAtendidosComPrevencao += buscaAno[mesAtualExtenso]["atendidos"];
-        } else {
-          somaPacientesDemandaSemPrevencao += buscaAno[mesAtualExtenso]["demanda"];
-          somaPacientesAtendidosSemPrevencao += buscaAno[mesAtualExtenso]["atendidos"];
+          if( demandasRecursosInternos[i]["recurso"].includes("prevenção") ) {
+            somaPacientesDemandaComPrevencao += buscaAno[mesAtualExtenso]["demanda"];
+            somaPacientesAtendidosComPrevencao += buscaAno[mesAtualExtenso]["atendidos"];
+          } else {
+            somaPacientesDemandaSemPrevencao += buscaAno[mesAtualExtenso]["demanda"];
+            somaPacientesAtendidosSemPrevencao += buscaAno[mesAtualExtenso]["atendidos"];
+          }
+
+          const objeto = { 
+            _id: demandasRecursosInternos[i]["_id"],
+            recurso: demandasRecursosInternos[i]["recurso"] ,
+            demanda: buscaAno[mesAtualExtenso]["demanda"],
+            atendidos: buscaAno[mesAtualExtenso]["atendidos"]
+          };
+
+          demandasRecursosInternosFinal.push(objeto);
         }
-
-        const objeto = { 
-          _id: demandasRecursosInternos[i]["_id"],
-          recurso: demandasRecursosInternos[i]["recurso"] ,
-          demanda: buscaAno[mesAtualExtenso]["demanda"],
-          atendidos: buscaAno[mesAtualExtenso]["atendidos"]
-        };
-
-        demandasRecursosInternosFinal.push(objeto);
       };
 
       //somando totais de com prevencao e de sem prevencao
@@ -305,10 +307,9 @@ class RecursoInternoController {
       //array de anos para poder escolher qual ano mostrar grafico. Busco todos os anos dos recursos, pego ano em array e removo duplicados
       const arrayAnos = [];
       for(let i = 0; i < recursos.length; i++) {
-        const objetoAno = recursos[i].pacientes.find((elemento) => elemento.ano === ano);
-        if(objetoAno) {
-          arrayAnos.push(objetoAno.ano); 
-        }
+        const objetoAno = recursos[i].pacientes.map((elemento) => elemento.ano);
+        arrayAnos.push(...objetoAno); 
+        
       }
       //removendo anos repetidos
       const arrayAnosNaoRepetidos = [...new Set(arrayAnos)];

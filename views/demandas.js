@@ -87,7 +87,7 @@ function mostraDetalhes(idRecurso, ano) {
       const options = selectedoption.options;
       console.log(options);
       for(let i = 0; i < options.length; i++) {
-        if ( options[i].value === ano) {
+        if ( options[i].value === data.ano) {
           options[i].setAttribute("selected", "true");
         }
       }
@@ -195,7 +195,7 @@ function mostraGraficoAnual(ano) {
       const options = selectedoption.options;
       console.log(options);
       for(let i = 0; i < options.length; i++) {
-        if ( options[i].value === ano) {
+        if ( options[i].value === data.ano) {
           options[i].setAttribute("selected", "true");
         }
       }
