@@ -30,7 +30,16 @@ router
   .get("/demandas/recursos_internos/:ano", estaLogado,  RecursoInternoController.mostraGraficoTotalRecursosInternosAno)
 
   .get("/demandas/recursos_internos", estaLogado, RecursoInternoController.listaRecursosInternos )
-  .post("/admin/demandas/recursos_internos", estaLogado, upload.single("file"), RecursoInternoController.atualizaRecursosInternos );
+  .post("/admin/demandas/recursos_internos", estaLogado, upload.single("file"), RecursoInternoController.atualizaRecursosInternos )
+
+//Rotas acesso público
+  .get("/publico/demandas/consultas",  (req, res, next) => demandaConsultaController.listaDemandasPublico(req, res, next))
+  .get("/publico/demandas/consultas/:ano", (req, res, next) => demandaConsultaController.mostraGraficoTotalDemandasAno(req, res, next))
+  .get("/publico/demandas/consultas/:idRecurso/:ano", (req, res, next) => demandaConsultaController.mostraDetalhesDemanda(req, res, next))
+
+  .get("/publico/demandas/exames",  (req, res, next) => demandaExameController.listaDemandasPublico(req, res, next))
+  .get("/publico/demandas/exames/:ano", (req, res, next) => demandaExameController.mostraGraficoTotalDemandasAno(req, res, next))
+  .get("/publico/demandas/exames/:idRecurso/:ano", estaLogado, (req, res, next) => demandaExameController.mostraDetalhesDemanda(req, res, next));
 
   
 export default router;

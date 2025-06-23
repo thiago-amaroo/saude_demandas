@@ -1,0 +1,97 @@
+  <%- include('header_publico'); -%>
+
+    <hr>
+    <h2 class="display-6 mb-3">Demandas Exames </h2>
+
+    <img id="grafico-anual" src="/icons/icone-grafico.jpg" width="35px" height="35px" style="cursor: pointer" alt="Ver gráfico anual">
+    <br>
+    <br>
+
+
+  <% if( typeof(erro) != "undefined") { %>
+      <div class="alert alert-danger" role="alert"> <%= mensagem %> </div>
+
+  <% } else { %>  
+
+    <table class="table table-striped table-hover" >
+        <tr> 
+            <td>
+                <strong> Exame </strong> 
+            </td>
+            <td style="text-align: center;">
+                <strong>  Pacientes </strong>
+            </td>
+
+        </tr>
+        
+        <% for(var i=0; i < demandas.length; i++) {%>
+            <tr  id="<%= demandas[i]._id %>" class="botao" style="cursor: pointer">
+                <td> <%= demandas[i].exame %>  </td>
+            
+                <td style="text-align: center;"> <%= demandas[i].qtde_pacientes %> </td> 
+
+
+            </tr>
+            
+        <% } %>
+
+        <tr> 
+          <td style="padding-top:20px"> <h5> <b> Total: </b> </h5> </td>
+          <td style="text-align: center; padding-top:20px"> <h5> <b> <%= somaPacientesDemanda %> </b>  </h5> </td>
+
+        </tr>
+    </table>
+  </main>
+  
+   <!-- Modal para abrir detalhes da especialidade -->
+<div class="modal fade" id="ModalDetalhes" tabindex="-1" aria-labelledby="ModalDetalhesLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title fs-5" id="ModalDetalhesLabel" style="color:rgb(62, 75, 175)">  </h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="modal-body" class="modal-body">
+            <div id="modal-mensagem-erro" class="alert alert-danger" role="alert"> </div>
+            <div id="modal-mensagem-sucesso" class="alert alert-success" role="alert"> </div>
+            <div id="modal-conteudo"> </div>
+        </div>
+        <div class="modal-footer">
+          <button id="button-close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+
+  <!-- Modal para abrir grafico anual -->
+<div class="modal fade" id="ModalGraficoAnual" tabindex="-1" aria-labelledby="ModalGraficoAnual" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title fs-5" id="ModalGraficoAnualLabel" style="color:rgb(62, 75, 175)">  </h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="modal-grafico-anual-body" class="modal-body">
+          <div id="modal-grafico-anual-mensagem-erro" class="alert alert-danger" role="alert"> </div>
+          <div id="modal-grafico-anual-mensagem-sucesso" class="alert alert-success" role="alert"> </div>
+          <div id="modal-grafico-anual-conteudo"> </div>
+      </div>
+      <div class="modal-footer">
+        <button id="button-close-modal-grafico-anual" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+  <script src="/demandas_publico.js" type="module"></script>
+  
+
+   <% }  %>  
+
+  <%- include('footer'); -%>

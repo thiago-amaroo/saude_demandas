@@ -215,6 +215,64 @@ class DemandaGenericController {
   };
 
 
+  async listaDemandasPublico (req, res, next) {
+    //definindo se nome do campo do bd será especialidade(consultas) ou exame (exames)
+    let nomeRecurso = "";
+    if(this.nomeDemanda === "demandas_consultas") {  nomeRecurso = "especialidade"; }
+    if(this.nomeDemanda === "demandas_exames") {  nomeRecurso = "exame"; }
+
+    const dataAtual = new Date();
+    const mesAtual = dataAtual.getMonth(); //retorna numero de 0 a 11. Janeiro = 0
+    const meses = ["janeiro", "fevereiro", "marco", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    const mesAtualExtenso = meses[mesAtual];
+    const anoAtual = dataAtual.getFullYear().toString();
+
+    let demandasFinal = [];
+    let somaPacientesDemanda = 0;
+    let somaPacientesAgendados = 0;
+
+    try {
+      //busca todos os recursos, pegando apenas os campos
+      const demandasResultado = await this.modeloDemanda.find( {} ).sort( { [nomeRecurso]: 1 } );
+      //console.log(demandasResultado);
+
+      for (let i = 0; i < demandasResultado.length; i++ ) {
+
+        const buscaAno = demandasResultado[i].pacientes.find((elemento2) => elemento2.ano === anoAtual );
+
+        //so adiciona ao objeto se valor de pacientes no mes é > 0. Pq pode ser que recurso nao esta mais no arquivo demanda, mas esta no bd zerado
+        if( buscaAno && buscaAno[mesAtualExtenso] > 0 ) {
+          //somando total de demandas:
+          somaPacientesDemanda += buscaAno[mesAtualExtenso];
+
+          const objeto = { 
+            _id: demandasResultado[i]["_id"],
+            [nomeRecurso]: demandasResultado[i][ [nomeRecurso] ] ,
+            qtde_pacientes: buscaAno[mesAtualExtenso],
+          };
+
+          //Inserindo quantidade de pacientes agendados do mes
+          const agendados = await modeloAgendamentos.find( { recurso: demandasResultado[i][nomeRecurso].trim()  } ).countDocuments();
+          somaPacientesAgendados += agendados;
+
+          //console.log( `${demandasResultado[i][nomeRecurso]}: ${agendados} `);
+          objeto.agendado = agendados;
+          demandasFinal.push(objeto);
+        }
+
+      };
+
+      //console.log(demandasFinal);
+      res.status(200).render(`${this.nomeDemanda}_publico`, { demandas: demandasFinal, somaPacientesDemanda: somaPacientesDemanda, somaPacientesAgendados: somaPacientesAgendados, role: req.role, usuario: req.usuario });
+
+    } catch(erro) {
+      console.log(erro);
+      erro.localDoErro = this.nomeDemanda+"_publico";
+      erro.mensagem = `Erro ao carregar a pagina "${this.nomeDemanda}_publico": "${erro}"`;
+      next(erro);
+    }
+  };
+
 
   async mostraDetalhesDemanda (req, res) {
     let nomeRecurso = "";
