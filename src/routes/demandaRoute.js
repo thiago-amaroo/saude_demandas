@@ -39,7 +39,7 @@ router
 
   .get("/publico/demandas/exames",  (req, res, next) => demandaExameController.listaDemandasPublico(req, res, next))
   .get("/publico/demandas/exames/:ano", (req, res, next) => demandaExameController.mostraGraficoTotalDemandasAno(req, res, next))
-  .get("/publico/demandas/exames/:idRecurso/:ano", estaLogado, (req, res, next) => demandaExameController.mostraDetalhesDemanda(req, res, next));
+  .get("/publico/demandas/exames/:idRecurso/:ano", (req, res, next) => demandaExameController.mostraDetalhesDemanda(req, res, next));
 
   
 export default router;

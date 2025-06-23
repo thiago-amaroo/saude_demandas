@@ -1,6 +1,5 @@
 const url = window.location.pathname;
 const recurso = url.substring(18);
-console.log(recurso);
 
 const elementosRecurso = document.querySelectorAll(".botao");
 
@@ -23,8 +22,7 @@ elementosRecurso.forEach((elemento) => {
 
 
 function mostraDetalhes(idRecurso, ano) {
-  console.log(ano);
-  console.log(idRecurso);
+
   //Limpando a div modal-conteudo e div modal-mensagem do modal
   document.querySelector("#modal-conteudo").innerHTML ="" ;
   document.querySelector("#modal-mensagem-erro").style.display = "none";
@@ -39,8 +37,7 @@ function mostraDetalhes(idRecurso, ano) {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-
+    
       let cabecalho = "";
       cabecalho += `: Recurso ${data.recurso} - Ano: ${data.ano} <br>`;
       if(recurso === "recursos_internos") {
@@ -86,7 +83,7 @@ function mostraDetalhes(idRecurso, ano) {
       const selectedoption = document.getElementById("troca-ano-detalhes");
       //As opções do seu select. Isto aqui é uma coleção:
       const options = selectedoption.options;
-      console.log(options);
+
       for(let i = 0; i < options.length; i++) {
         if ( options[i].value === data.ano) {
           options[i].setAttribute("selected", "true");
@@ -128,7 +125,7 @@ imgGraficoAnual.addEventListener("click", () => {
 
 
 function mostraGraficoAnual(ano) {
-  console.log(ano);
+
   //Limpando a div modal-conteudo e div modal-mensagem do modal
   document.querySelector("#modal-grafico-anual-conteudo").innerHTML ="" ;
   document.querySelector("#modal-grafico-anual-mensagem-erro").style.display = "none";
@@ -143,7 +140,7 @@ function mostraGraficoAnual(ano) {
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+ 
 
       let cabecalho = "";
       cabecalho += `Ano ${data.ano} -`;
@@ -194,7 +191,7 @@ function mostraGraficoAnual(ano) {
       const selectedoption = document.getElementById("troca-ano-detalhes-anual");
       //As opções do seu select. Isto aqui é uma coleção:
       const options = selectedoption.options;
-      console.log(options);
+
       for(let i = 0; i < options.length; i++) {
         if ( options[i].value === data.ano) {
           options[i].setAttribute("selected", "true");
