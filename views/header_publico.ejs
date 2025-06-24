@@ -44,7 +44,7 @@
 
 <nav class="navbar navbar-expand-lg " style="background-color: #427859; font-size:17px; border-radius: 8px; opacity: 0.95;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/inicio" style="color: #fff" > Menu </a>
+      <a class="navbar-brand" href="#" style="color: #fff" > Menu </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -56,32 +56,11 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/publico/demandas/exames"  style="color: #fff"> Demandas Exames </a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/demandas/recursos_internos"  style="color: #fff"> Demandas Internas </a>
-          </li> -->
-    
-            <!-- Se nao tiver variavel role ou usuario sendo passada, o typeof(role ou usuario) igual a undefined -->
-            <% if( typeof(role) != "undefined") { %>
-                <% if( role === "admin" ) { %>
-                    <li class="nav-item">
-                    <a class="nav-link" href="/admin"  style="color: #fff"> Area Admin  </a>
-                    </li>
-                <% } %>
-            <% } %>
-    
 
-            <% if( typeof(usuario) != "undefined") { %>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout"  style="color: #fff"> Logout </a>
-                </li>
-            <% } %>
+    
             </ul>
 
-            <% if( typeof(role) != "undefined") { %>
-                <span class="navbar-text" style="color: #fff">
-                Olá, <%= usuario %> <br>
-                </span>
-            <% } %>
+        
       </div>
     </div>
   </nav>
